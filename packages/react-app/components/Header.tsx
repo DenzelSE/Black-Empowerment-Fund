@@ -1,157 +1,207 @@
-// import { Disclosure } from "@headlessui/react";
-// import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-// import Image from "next/image";
-import { useEffect, useState } from "react";
 import { useConnect } from "wagmi";
 import { injected } from "wagmi/connectors";
-
-// export default function Header() {
-//   const [hideConnectBtn, setHideConnectBtn] = useState(false);
-//   const { connect } = useConnect();
-
-//   useEffect(() => {
-//     if (window.ethereum && window.ethereum.isMiniPay) {
-//       setHideConnectBtn(true);
-//       connect({ connector: injected({ target: "metaMask" }) });
-//     }
-//   }, []);
-
-//   return (
-//     <Disclosure as="nav" className="bg-colors-primary border-b border-black">
-//       {({ open }) => (
-//         <>
-//           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-//             <div className="relative flex h-16 justify-between">
-//               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-//                 {/* Mobile menu button */}
-//                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-black focus:outline-none focus:ring-1 focus:ring-inset focus:rounded-none focus:ring-black">
-//                   <span className="sr-only">Open main menu</span>
-//                   {open ? (
-//                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-//                   ) : (
-//                     <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-//                   )}
-//                 </Disclosure.Button>
-//               </div>
-//               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-//                 <div className="flex flex-shrink-0 items-center">
-//                   <Image
-//                     className="block h-8 w-auto sm:block lg:block"
-//                     src="/logo.svg"
-//                     width="24"
-//                     height="24"
-//                     alt="Celo Logo"
-//                   />
-//                 </div>
-//                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-//                   <a
-//                     href="#"
-//                     className="inline-flex items-center border-b-2 border-black px-1 pt-1 text-sm font-medium text-gray-900"
-//                   >
-//                     Home
-//                   </a>
-//                 </div>
-//               </div>
-//               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-//                 {!hideConnectBtn && (
-//                   <ConnectButton
-//                     showBalance={{
-//                       smallScreen: true,
-//                       largeScreen: false,
-//                     }}
-//                   />
-//                 )}
-//               </div>
-//             </div>
-//           </div>
-
-//           <Disclosure.Panel className="sm:hidden">
-//             <div className="space-y-1 pt-2 pb-4">
-//               <Disclosure.Button
-//                 as="a"
-//                 href="#"
-//                 className="block border-l-4 border-black py-2 pl-3 pr-4 text-base font-medium text-black"
-//               >
-//                 Home
-//               </Disclosure.Button>
-//               {/* Add here your custom menu elements */}
-//             </div>
-//           </Disclosure.Panel>
-//         </>
-//       )}
-//     </Disclosure>
-//   );
-// }
-
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown,Wallet, ArrowLeft  } from "lucide-react";
+
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
+
+import { toast } from "sonner";
+import { 
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink
+} from "@/components/ui/navigation-menu";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hideConnectBtn, setHideConnectBtn] = useState(false);
   const { connect } = useConnect();
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
+  const navigate = useRouter();
+  const location = usePathname();
 
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const checkRegistration = async (address:string) => {
+    const registeredAddress = localStorage.getItem("walletAddress");
+    if (registeredAddress) {
+      toast(`Welcome back ${registeredAddress}`);
+      navigate.push("/dashboard");
+
+    } else {
+      toast.info("Please register your wallet address");
+      navigate.push("/signup");
+    }
+  }
+
+  // Check if wallet was previously connected
+  useEffect(() => {
+    const savedAddress = localStorage.getItem('walletAddress');
+    if (savedAddress) {
+      setWalletAddress(savedAddress);
+      setWalletConnected(true);
+    }
+  }, []);
+
+  const connectWallet = async () => {
+    setIsConnecting(true);
+    try {
+
+      if (window.ethereum) {
+        toast.info("Connecting to wallet...");
+
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        const address = accounts[0];
+        setWalletAddress(address);
+        setWalletConnected(true);
+        localStorage.setItem("walletAddress", address);
+        toast.success("Wallet connected successfully");
+        checkRegistration(address);
+      } else {
+        toast.error("Please install a web3 wallet like MetaMask");
+      }
+      
+    } catch (error) {
+      console.error("Error connecting wallet:", error);
+      toast.error("Error connecting wallet");
+    }
+    setIsConnecting(false);
+  }
+
+  // Auto-connect if MiniPay + Mobile
   useEffect(() => {
     const isMiniPay = window?.ethereum?.isMiniPay;
-    const isMobile = window?.innerWidth <= 768; // Adjust this based on your mobile breakpoint
+    const isMobile = window?.innerWidth <= 768;
 
     if (isMiniPay && isMobile) {
       setHideConnectBtn(true); // Only hide on mobile + MiniPay
+
+      // Use wagmi connector if needed
       setTimeout(() => {
         connect({ connector: injected({ target: 'metaMask' }) });
+        connectWallet(); // Manually trigger wallet logic
       }, 0);
     } else {
       setHideConnectBtn(false);
     }
-  }, [connect]);
+  }, [connect, connectWallet]);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  const handleConnectWallet = async () => {
+    connectWallet();
+  }
+
+  const isHomePage = location === "/";
+  const isProtectedPage = location === "/dashboard" || location === "/signup";
+  const isAuthPage = location === "/signup";
+
+
 
   return (
     <nav className="bg-white/90 backdrop-blur-md sticky top-0 z-50 py-4 shadow-sm">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex justify-between items-center">
+          {/* Logo section - always visible */}
           <div className="flex items-center space-x-2">
-            <div className="h-10 w-12 bg-bef-purple rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xl">BEF</span>
+            <div 
+              className="h-10 w-10 bg-bef-purple rounded-full flex items-center justify-center cursor-pointer" 
+              onClick={() => navigate.push('/')}
+            >
+              <span className="text-white font-bold text-xl">B</span>
             </div>
-            <span className="text-xl font-bold text-bef-black">
+            <span 
+              className="text-xl font-bold text-bef-black cursor-pointer" 
+              onClick={() => navigate.push('/')}
+            >
               Black Empowerment Fund
             </span>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Dynamic navigation section - desktop */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-bef-black hover:text-bef-purple transition-colors">
-              Features
-            </a>
-            <a href="#how-it-works" className="text-bef-black hover:text-bef-purple transition-colors">
-              How It Works
-            </a>
-            <a href="#benefits" className="text-bef-black hover:text-bef-purple transition-colors">
-              Benefits
-            </a>
-            <a href="#faq" className="text-bef-black hover:text-bef-purple transition-colors">
-              FAQ
-            </a>
-            <Button
-              className="bg-bef-purple hover:bg-bef-darkPurple"
-              title="Join Now"
-              onClick={() => console.log('Join Now clicked')}
-            >
-              Join Now
-            </Button>
-
-            {!hideConnectBtn && (
-              <ConnectButton
-              showBalance={{
-                smallScreen: true,
-                largeScreen: false,
-              }}
-            />
+            {isHomePage && (
+              <>
+                <a href="#features" className="text-bef-black hover:text-bef-purple transition-colors">
+                  Features
+                </a>
+                <a href="#how-it-works" className="text-bef-black hover:text-bef-purple transition-colors">
+                  How It Works
+                </a>
+                <a href="#benefits" className="text-bef-black hover:text-bef-purple transition-colors">
+                  Benefits
+                </a>
+                <a href="#faq" className="text-bef-black hover:text-bef-purple transition-colors">
+                  FAQ
+                </a>
+              </>
             )}
-
+            
+            {isProtectedPage && (
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <Link href="/dashboard" className={`text-bef-black hover:text-bef-purple transition-colors ${location === '/dashboard' ? 'font-bold text-bef-purple' : ''}`}>
+                      Dashboard
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem className="ml-6">
+                    <Link href="/signup" className={`text-bef-black hover:text-bef-purple transition-colors ${location === '/signup' ? 'font-bold text-bef-purple' : ''}`}>
+                      Membership
+                    </Link>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            )}
+            
+            {isAuthPage && (
+              <Button 
+                variant="ghost" 
+                className="text-bef-black hover:text-bef-purple"
+                onClick={() => navigate.push('/')}
+                title="Back to Home"
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Home
+              </Button>
+            )}
+            
+            {walletConnected ? (
+              <Button variant="outline" className="border-bef-purple text-bef-purple"
+                title="Wallet Connected"
+                onClick={() => {
+                  navigate.push('/dashboard');
+                }
+                }>
+                <Wallet className="mr-2 h-4 w-4" />
+                {`${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}
+              </Button>
+            ) : (
+              <Button 
+                className="bg-bef-purple hover:bg-bef-darkPurple"
+                onClick={handleConnectWallet}
+                disabled={isConnecting}
+                title="Connect Wallet"
+              >
+                {isConnecting ? (
+                  <span className="flex items-center">
+                    <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></span>
+                    Connecting...
+                  </span>
+                ) : (
+                  <span className="flex items-center">
+                    <Wallet className="mr-2 h-4 w-4" />
+                    Connect Wallet
+                  </span>
+                )}
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -173,41 +223,100 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden mt-4 py-3 border-t border-gray-200">
             <div className="flex flex-col space-y-3">
-              <ConnectButton
-                showBalance={{
-                  smallScreen: true,
-                  largeScreen: false,
-                }}
-              />
-              <a
-                href="#features"
-                className="text-bef-black hover:text-bef-purple px-3 py-2"
-                onClick={toggleMenu}
-              >
-                Features
-              </a>
-              <a
-                href="#how-it-works"
-                className="text-bef-black hover:text-bef-purple px-3 py-2"
-                onClick={toggleMenu}
-              >
-                How It Works
-              </a>
-              <a
-                href="#benefits"
-                className="text-bef-black hover:text-bef-purple px-3 py-2"
-                onClick={toggleMenu}
-              >
-                Benefits
-              </a>
-              <a
-                href="#faq"
-                className="text-bef-black hover:text-bef-purple px-3 py-2"
-                onClick={toggleMenu}
-              >
-                FAQ
-              </a>
-
+              {isHomePage && (
+                <>
+                  <a
+                    href="#features"
+                    className="text-bef-black hover:text-bef-purple px-3 py-2"
+                    onClick={toggleMenu}
+                  >
+                    Features
+                  </a>
+                  <a
+                    href="#how-it-works"
+                    className="text-bef-black hover:text-bef-purple px-3 py-2"
+                    onClick={toggleMenu}
+                  >
+                    How It Works
+                  </a>
+                  <a
+                    href="#benefits"
+                    className="text-bef-black hover:text-bef-purple px-3 py-2"
+                    onClick={toggleMenu}
+                  >
+                    Benefits
+                  </a>
+                  <a
+                    href="#faq"
+                    className="text-bef-black hover:text-bef-purple px-3 py-2"
+                    onClick={toggleMenu}
+                  >
+                    FAQ
+                  </a>
+                </>
+              )}
+              
+              {isProtectedPage && (
+                <>
+                  <Link 
+                    href="/dashboard" 
+                    className={`px-3 py-2 ${location === '/dashboard' ? 'text-bef-purple font-bold' : 'text-bef-black'}`}
+                    onClick={toggleMenu}
+                  >
+                    Dashboard
+                  </Link>
+                  <Link 
+                    href="/signup" 
+                    className={`px-3 py-2 ${location === '/signup' ? 'text-bef-purple font-bold' : 'text-bef-black'}`}
+                    onClick={toggleMenu}
+                  >
+                    Membership
+                  </Link>
+                </>
+              )}
+              
+              {isAuthPage && (
+                <Button 
+                  variant="ghost" 
+                  className="text-bef-black hover:text-bef-purple justify-start px-3"
+                  onClick={() => {
+                    navigate.push('/');
+                    toggleMenu();
+                  }}
+                  title="Back to Home"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Home
+                </Button>
+              )}
+              
+              {walletConnected ? (
+                <Button variant="outline" className="border-bef-purple text-bef-purple w-full"
+                title="Wallet Connected"
+                onClick={toggleMenu}>
+                  <Wallet className="mr-2 h-4 w-4" />
+                  {`${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}
+                </Button>
+              ) : (
+                <Button 
+                  className="bg-bef-purple hover:bg-bef-darkPurple w-full"
+                  onClick={handleConnectWallet}
+                  disabled={isConnecting}
+                  title="Connect Wallet"
+                >
+                  {isConnecting ? (
+                    <span className="flex items-center justify-center">
+                      <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></span>
+                      Connecting...
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center">
+                      <Wallet className="mr-2 h-4 w-4" />
+                      Connect Wallet
+                    </span>
+                  )}
+                </Button>
+              )}
             </div>
           </div>
         )}
