@@ -1,16 +1,16 @@
-# Black Empowermeent Fund - Community Finance Platform
+# Black Empowerment Fund - Community Finance Platform
 
-![Black Empowermeent Fund](https://placeholder.com/wp-content/uploads/2018/10/placeholder.png)
+![Black Empowerment Fund](https://placeholder.com/wp-content/uploads/2018/10/placeholder.png)
 
 ## About the Project
 
-Black Empowermeent Fund combines traditional community-based savings (Stokvel) with blockchain technology, creating a modern financial platform that empowers communities through decentralized finance.
+Black Empowerment Fund combines traditional community-based savings (Stokvel) with blockchain technology, creating a modern financial platform that empowers communities through decentralized finance.
 
 ## For Users
 
-### What is Black Empowermeent Fund?
+### What is Black Empowerment Fund?
 
-Black Empowermeent Fund is a platform that brings together small groups of people who want to save and grow money together. By combining traditional community finance principles with modern blockchain technology, we offer:
+Black Empowerment Fund is a platform that brings together small groups of people who want to save and grow money together. By combining traditional community finance principles with modern blockchain technology, we offer:
 
 - **Transparent savings** - See exactly where your money goes
 - **Regular payouts** - Rotating system ensures everyone gets a turn
