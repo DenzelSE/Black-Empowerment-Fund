@@ -1,10 +1,10 @@
 // import { Disclosure } from "@headlessui/react";
 // import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-// import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 // import Image from "next/image";
-// import { useEffect, useState } from "react";
-// import { useConnect } from "wagmi";
-// import { injected } from "wagmi/connectors";
+import { useEffect, useState } from "react";
+import { useConnect } from "wagmi";
+import { injected } from "wagmi/connectors";
 
 // export default function Header() {
 //   const [hideConnectBtn, setHideConnectBtn] = useState(false);
@@ -84,12 +84,27 @@
 //   );
 // }
 
-import { useState } from "react";
 import { Button } from "./ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [hideConnectBtn, setHideConnectBtn] = useState(false);
+  const { connect } = useConnect();
+
+  useEffect(() => {
+    const isMiniPay = window?.ethereum?.isMiniPay;
+    const isMobile = window?.innerWidth <= 768; // Adjust this based on your mobile breakpoint
+
+    if (isMiniPay && isMobile) {
+      setHideConnectBtn(true); // Only hide on mobile + MiniPay
+      setTimeout(() => {
+        connect({ connector: injected({ target: 'metaMask' }) });
+      }, 0);
+    } else {
+      setHideConnectBtn(false);
+    }
+  }, []);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -98,8 +113,8 @@ const Navbar = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <div className="h-10 w-10 bg-bef-purple rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xl">B</span>
+            <div className="h-10 w-12 bg-bef-purple rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-xl">BEF</span>
             </div>
             <span className="text-xl font-bold text-bef-black">
               Black Empowerment Fund
@@ -120,13 +135,23 @@ const Navbar = () => {
             <a href="#faq" className="text-bef-black hover:text-bef-purple transition-colors">
               FAQ
             </a>
-            <Button 
-              className="bg-bef-purple hover:bg-bef-darkPurple" 
-              title="Join Now" 
+            <Button
+              className="bg-bef-purple hover:bg-bef-darkPurple"
+              title="Join Now"
               onClick={() => console.log('Join Now clicked')}
             >
               Join Now
             </Button>
+
+            {!hideConnectBtn && (
+              <ConnectButton
+              showBalance={{
+                smallScreen: true,
+                largeScreen: false,
+              }}
+            />
+            )}
+
           </div>
 
           {/* Mobile menu button */}
@@ -148,6 +173,12 @@ const Navbar = () => {
         {isOpen && (
           <div className="md:hidden mt-4 py-3 border-t border-gray-200">
             <div className="flex flex-col space-y-3">
+              <ConnectButton
+                showBalance={{
+                  smallScreen: true,
+                  largeScreen: false,
+                }}
+              />
               <a
                 href="#features"
                 className="text-bef-black hover:text-bef-purple px-3 py-2"
@@ -176,13 +207,7 @@ const Navbar = () => {
               >
                 FAQ
               </a>
-              <Button 
-                className="bg-bef-purple hover:bg-bef-darkPurple w-full" 
-                title="Join Now" 
-                onClick={() => console.log('Join Now clicked')}
-              >
-                Join Now
-              </Button>
+
             </div>
           </div>
         )}

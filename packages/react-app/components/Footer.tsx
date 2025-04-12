@@ -1,56 +1,139 @@
-type Props = {
-  className?: string;
-};
+import { ChevronRight, Mail, MapPin, Phone } from "lucide-react";
 
-const navigation = [
-  {
-    name: "Twitter",
-    href: "https://twitter.com/CeloDevs",
-    icon: (props: Props) => (
-      <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-        <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-      </svg>
-    ),
-  },
-  {
-    name: "GitHub",
-    href: "https://github.com/celo-org/celo-composer",
-    icon: (props: Props) => (
-      <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-        <path
-          fillRule="evenodd"
-          d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-          clipRule="evenodd"
-        />
-      </svg>
-    ),
-  },
-];
-
-export default function Footer() {
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
+  
   return (
-    <footer className="bg-gypsum mt-auto border-black border-t">
-      <div className="mx-auto max-w-7xl py-6 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
-        <div className="flex justify-center space-x-6 md:order-2">
-          {navigation.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="text-black hover:text-forest"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="sr-only">{item.name}</span>
-              <item.icon className="h-6 w-6" aria-hidden="true" />
-            </a>
-          ))}
+    <footer className="bg-bef-black text-white pt-16 pb-8">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <div>
+            <div className="flex items-center space-x-2 mb-4">
+              <div className="h-10 w-10 bg-bef-purple rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-xl">B</span>
+              </div>
+              <span className="text-xl font-bold">Black Empowerment Fund</span>
+            </div>
+            <p className="text-gray-400 mb-4">
+              Combining traditional stokvel principles with decentralized finance to empower our community through collective wealth building.
+            </p>
+            <div className="flex space-x-4">
+              <a href="#" className="text-white hover:text-bef-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+              </a>
+              <a href="#" className="text-white hover:text-bef-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <a href="#" className="text-white hover:text-bef-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                  <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+                </svg>
+              </a>
+              <a href="#" className="text-white hover:text-bef-purple">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+              </a>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="font-bold text-lg mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="#features" className="text-gray-400 hover:text-white flex items-center">
+                  <ChevronRight className="h-4 w-4 mr-1" />
+                  Features
+                </a>
+              </li>
+              <li>
+                <a href="#how-it-works" className="text-gray-400 hover:text-white flex items-center">
+                  <ChevronRight className="h-4 w-4 mr-1" />
+                  How It Works
+                </a>
+              </li>
+              <li>
+                <a href="#benefits" className="text-gray-400 hover:text-white flex items-center">
+                  <ChevronRight className="h-4 w-4 mr-1" />
+                  Benefits
+                </a>
+              </li>
+              <li>
+                <a href="#faq" className="text-gray-400 hover:text-white flex items-center">
+                  <ChevronRight className="h-4 w-4 mr-1" />
+                  FAQ
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="font-bold text-lg mb-4">Legal</h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="#" className="text-gray-400 hover:text-white flex items-center">
+                  <ChevronRight className="h-4 w-4 mr-1" />
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-white flex items-center">
+                  <ChevronRight className="h-4 w-4 mr-1" />
+                  Terms of Service
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-white flex items-center">
+                  <ChevronRight className="h-4 w-4 mr-1" />
+                  Disclaimer
+                </a>
+              </li>
+              <li>
+                <a href="#" className="text-gray-400 hover:text-white flex items-center">
+                  <ChevronRight className="h-4 w-4 mr-1" />
+                  KYC Policy
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="font-bold text-lg mb-4">Contact Us</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <MapPin className="h-5 w-5 mr-3 text-bef-purple shrink-0 mt-0.5" />
+                <span className="text-gray-400">
+                  123 Innovation Way, Johannesburg, South Africa
+                </span>
+              </li>
+              <li className="flex items-center">
+                <Phone className="h-5 w-5 mr-3 text-bef-purple" />
+                <span className="text-gray-400">+27 10 123 4567</span>
+              </li>
+              <li className="flex items-center">
+                <Mail className="h-5 w-5 mr-3 text-bef-purple" />
+                <span className="text-gray-400">info@blackempowermentfund.com</span>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="mt-8 md:order-1 md:mt-0">
-          <p className="text-center text-base text-black">
-            &copy; {new Date().getFullYear()} Build for Minipay.
+        
+        <div className="border-t border-gray-800 pt-8">
+          <p className="text-center text-gray-500 text-sm">
+            &copy; {currentYear} Black Empowerment Fund Stokvel. All rights reserved.
           </p>
         </div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;
