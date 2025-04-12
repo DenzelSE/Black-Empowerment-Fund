@@ -104,7 +104,7 @@ const Navbar = () => {
     } else {
       setHideConnectBtn(false);
     }
-  }, []);
+  }, [connect]);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 

@@ -49,7 +49,7 @@ const CTA = () => {
           </div>
           
           <p className="text-sm text-gray-400 mt-4">
-            By joining, you'll be at the forefront of financial innovation that combines tradition with technology for community empowerment.
+            By joining, you&apos;ll be at the forefront of financial innovation that combines tradition with technology for community empowerment.
           </p>
         </div>
       </div>

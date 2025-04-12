@@ -72,7 +72,7 @@ const Benefits = () => {
             <div className="space-y-6">
               <div className="bg-bef-gray rounded-xl p-6 relative">
                 <div className="absolute top-0 right-0 transform -translate-y-1/2 translate-x-1/2 bg-bef-purple text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-xl">
-                  "
+                &quot;
                 </div>
                 <p className="text-gray-700 mb-4">
                   The Black Empowerment Fund has transformed how I think about saving and investing. The combination of monthly payouts and DeFi yields has given my family financial flexibility we never had before.
@@ -90,10 +90,10 @@ const Benefits = () => {
               
               <div className="bg-bef-gray rounded-xl p-6 relative">
                 <div className="absolute top-0 right-0 transform -translate-y-1/2 translate-x-1/2 bg-bef-gold text-black rounded-full w-10 h-10 flex items-center justify-center font-bold text-xl">
-                  "
+                &quot;
                 </div>
                 <p className="text-gray-700 mb-4">
-                  I joined the stokvel to save, but I've gained so much more. The community governance aspect means we all have a say in how our funds are used, and the blockchain technology gives me peace of mind.
+                  I joined the stokvel to save, but I&apos;ve gained so much more. The community governance aspect means we all have a say in how our funds are used, and the blockchain technology gives me peace of mind.
                 </p>
                 <div className="flex items-center">
                   <div className="bg-bef-gold/20 w-10 h-10 rounded-full flex items-center justify-center text-bef-gold font-bold mr-3">
@@ -108,10 +108,10 @@ const Benefits = () => {
               
               <div className="bg-bef-gray rounded-xl p-6 relative">
                 <div className="absolute top-0 right-0 transform -translate-y-1/2 translate-x-1/2 bg-bef-purple text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-xl">
-                  "
+                &quot;
                 </div>
                 <p className="text-gray-700 mb-4">
-                  The educational resources provided have been incredible. I've learned so much about DeFi and blockchain, while simultaneously building wealth. It's a win-win for our community.
+                  The educational resources provided have been incredible. I&apos;ve learned so much about DeFi and blockchain, while simultaneously building wealth. It&apos;s a win-win for our community.
                 </p>
                 <div className="flex items-center">
                   <div className="bg-bef-purple/20 w-10 h-10 rounded-full flex items-center justify-center text-bef-purple font-bold mr-3">
