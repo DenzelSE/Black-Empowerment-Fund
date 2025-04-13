@@ -1,8 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Coins, Users, TrendingUp, ChevronsDown } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useWeb3 } from "@/contexts/useWeb3";
+import { useEffect } from "react";
 
 const Hero = () => {
+  const {address, isMember, getUserAddress} = useWeb3();
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserAddress = async () => {
+      await getUserAddress();
+    };
+
+    fetchUserAddress();
+  }
+  , [getUserAddress]);
+
   return (
     <section className="py-8 md:py-24 hero-pattern">
       <div className="container mx-auto px-4 md:px-6">
@@ -24,14 +39,21 @@ const Hero = () => {
               opportunities for our community.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/signup">
+
                 <Button className="bg-bef-purple hover:bg-bef-darkPurple text-lg px-6 py-6 sm:w-full "
                 title="Join the Movement"
-                onClick={() => console.log('Join the Movement clicked')}>
+                onClick={() => {
+                  if (address) {
+                    router.push("/signup");
+                  } else {
+                    alert("Please connect your wallet to join the movement.");
+                  }
+                }
+                }>
                   Join the Movement
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-              </Link>
+
               <Button
                 variant="outline"
                 className="border-bef-purple text-bef-purple hover:bg-bef-purple/10 text-lg px-6 py-6 md:w-1/2"

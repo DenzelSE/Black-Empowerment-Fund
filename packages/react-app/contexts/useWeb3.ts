@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StableTokenABI from "./cusd-abi.json";
 import MinipayNFTABI from "./minipay-nft.json";
 import {
@@ -20,20 +20,60 @@ const publicClient = createPublicClient({
 const cUSDTokenAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"; // Testnet
 const MINIPAY_NFT_CONTRACT = "0xE8F4699baba6C86DA9729b1B0a1DA1Bd4136eFeF"; // Testnet
 
+const BEFNFT = getContract({
+    abi: MinipayNFTABI.abi,
+    address: MINIPAY_NFT_CONTRACT,
+    client: publicClient,
+});
+
+
+
 export const useWeb3 = () => {
     const [address, setAddress] = useState<string | null>(null);
+    const [isMember, setIsMember] = useState<boolean>(false);
+    const [nftOwnership, setNftOwnership] = useState<boolean>(false);
+
+    const getWalletClient = () => {
+        return createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
+        });
+    };
 
     const getUserAddress = async () => {
         if (typeof window !== "undefined" && window.ethereum) {
-            let walletClient = createWalletClient({
-                transport: custom(window.ethereum),
-                chain: celoAlfajores,
-            });
-
+            let walletClient = getWalletClient();
             let [address] = await walletClient.getAddresses();
+            if (!address) {
+                console.error("No address found");
+                return;
+            }
             setAddress(address);
+
+            const isNFTOwner = (await BEFNFT.read.balanceOf([address])) as number;
+            setNftOwnership(isNFTOwner > 0);
+            setIsMember(isNFTOwner > 0);
         }
     };
+
+    useEffect(() => {
+        try {
+            getUserAddress();
+        } catch (error) {
+            console.error("Error getting user address:", error);
+        }
+    }, []);
+
+    const checkMembership = async () => {
+        if (typeof window !== "undefined" && window.ethereum) {
+            let walletClient = getWalletClient();
+            let [address] = await walletClient.getAddresses();
+
+            const isNFTOwner = (await BEFNFT.read.balanceOf([address])) as number;
+            setNftOwnership(isNFTOwner > 0);
+            setIsMember(isNFTOwner > 0);
+        }
+    }
 
     const sendCUSD = async (to: string, amount: string) => {
         let walletClient = createWalletClient({
@@ -132,6 +172,10 @@ export const useWeb3 = () => {
 
     return {
         address,
+        isMember,
+        nftOwnership,
+        setIsMember,
+        setNftOwnership,
         getUserAddress,
         sendCUSD,
         mintMinipayNFT,

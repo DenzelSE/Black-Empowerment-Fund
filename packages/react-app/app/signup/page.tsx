@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import Navbar from "@/components/Navbar";
 // import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,8 @@ import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { useWeb3 } from "@/contexts/useWeb3";
+
 // import { redirect } from "next/dist/server/api-utils";
 
 const SignupPage = () => {
@@ -20,6 +22,17 @@ const SignupPage = () => {
     const [step, setStep] = useState<"info" | "minting" | "success">("info");
     const [agreeToTerms, setAgreeToTerms] = useState(false);
     const router = useRouter();
+    const {address, isMember, getUserAddress, setIsMember} = useWeb3();
+
+    useEffect(() => {
+        const isRegistered = isMember;
+        if (isRegistered) {
+            router.push("/dashboard");
+        } else {
+            getUserAddress();
+        }
+    }
+    , [getUserAddress, router]);
 
     const handleMint = async () => {
         if (!agreeToTerms) {
@@ -27,8 +40,19 @@ const SignupPage = () => {
             return;
         }
 
+        if (!address) {
+            alert("Please connect your wallet first");
+            return;
+        }
+
+        if (isMember) {
+            toast.error("You are already a member");
+            return;
+        }
+
         setStep("minting");
         setIsMinting(true);
+        setIsMember(true);
 
         try {
             // Simulate minting process with a timeout
@@ -306,7 +330,7 @@ const SignupPage = () => {
                     <Button
                       className="w-full bg-bef-purple hover:bg-bef-darkPurple text-white"
                       onClick={handleMint}
-                      disabled={isMinting || !agreeToTerms}
+                      disabled={isMinting || !agreeToTerms }
                       title="Mint Membership NFT"
                     >
                       <Wallet className="mr-2 h-4 w-4" />

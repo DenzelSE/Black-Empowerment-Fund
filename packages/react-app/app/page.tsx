@@ -6,8 +6,12 @@ import HowItWorks from "@/components/HowItWorks";
 import Benefits from "@/components/Benefits";
 import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
+import { useWeb3 } from "@/contexts/useWeb3";
 
 export default function Home() {
+
+    const { address, isMember, nftOwnership } = useWeb3();
+
 
 
 

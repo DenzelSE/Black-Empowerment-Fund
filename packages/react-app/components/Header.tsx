@@ -3,13 +3,13 @@ import { useConnect } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { Menu, X, ChevronDown,Wallet, ArrowLeft  } from "lucide-react";
+import { Menu, X, ChevronDown, Wallet, ArrowLeft } from "lucide-react";
 
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 
 import { toast } from "sonner";
-import { 
+import {
   NavigationMenu,
   NavigationMenuList,
   NavigationMenuItem,
@@ -28,7 +28,7 @@ const Navbar = () => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const checkRegistration = async (address:string) => {
+  const checkRegistration = async (address: string) => {
     const registeredAddress = localStorage.getItem("walletAddress");
     if (registeredAddress) {
       toast(`Welcome back ${registeredAddress}`);
@@ -68,7 +68,7 @@ const Navbar = () => {
       } else {
         toast.error("Please install a web3 wallet like MetaMask");
       }
-      
+
     } catch (error) {
       console.error("Error connecting wallet:", error);
       toast.error("Error connecting wallet");
@@ -99,7 +99,7 @@ const Navbar = () => {
   }
 
   const isHomePage = location === "/";
-  const isProtectedPage = location === "/dashboard" || location === "/signup";
+  const isProtectedPage = location === "/dashboard"
   const isAuthPage = location === "/signup";
 
 
@@ -110,14 +110,14 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           {/* Logo section - always visible */}
           <div className="flex items-center space-x-2">
-            <div 
-              className="h-10 w-10 bg-bef-purple rounded-full flex items-center justify-center cursor-pointer" 
+            <div
+              className="h-10 w-10 bg-bef-purple rounded-full flex items-center justify-center cursor-pointer"
               onClick={() => navigate.push('/')}
             >
               <span className="text-white font-bold text-xl">B</span>
             </div>
-            <span 
-              className="text-xl font-bold text-bef-black cursor-pointer" 
+            <span
+              className="text-xl font-bold text-bef-black cursor-pointer"
               onClick={() => navigate.push('/')}
             >
               Black Empowerment Fund
@@ -140,9 +140,21 @@ const Navbar = () => {
                 <a href="#faq" className="text-bef-black hover:text-bef-purple transition-colors">
                   FAQ
                 </a>
+
+                {!hideConnectBtn && (
+              <ConnectButton
+                showBalance={{
+                  smallScreen: false,
+                  largeScreen: true,
+                }}
+                accountStatus="address"
+                chainStatus="icon"
+                label="Connect Wallet"
+              />
+            )}
               </>
             )}
-            
+
             {isProtectedPage && (
               <NavigationMenu>
                 <NavigationMenuList>
@@ -151,18 +163,18 @@ const Navbar = () => {
                       Dashboard
                     </Link>
                   </NavigationMenuItem>
-                  <NavigationMenuItem className="ml-6">
+                  {/* <NavigationMenuItem className="ml-6">
                     <Link href="/signup" className={`text-bef-black hover:text-bef-purple transition-colors ${location === '/signup' ? 'font-bold text-bef-purple' : ''}`}>
                       Membership
                     </Link>
-                  </NavigationMenuItem>
+                  </NavigationMenuItem> */}
                 </NavigationMenuList>
               </NavigationMenu>
             )}
-            
+
             {isAuthPage && (
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 className="text-bef-black hover:text-bef-purple"
                 onClick={() => navigate.push('/')}
                 title="Back to Home"
@@ -171,37 +183,8 @@ const Navbar = () => {
                 Back to Home
               </Button>
             )}
+
             
-            {walletConnected ? (
-              <Button variant="outline" className="border-bef-purple text-bef-purple"
-                title="Wallet Connected"
-                onClick={() => {
-                  navigate.push('/dashboard');
-                }
-                }>
-                <Wallet className="mr-2 h-4 w-4" />
-                {`${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}
-              </Button>
-            ) : (
-              <Button 
-                className="bg-bef-purple hover:bg-bef-darkPurple"
-                onClick={handleConnectWallet}
-                disabled={isConnecting}
-                title="Connect Wallet"
-              >
-                {isConnecting ? (
-                  <span className="flex items-center">
-                    <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></span>
-                    Connecting...
-                  </span>
-                ) : (
-                  <span className="flex items-center">
-                    <Wallet className="mr-2 h-4 w-4" />
-                    Connect Wallet
-                  </span>
-                )}
-              </Button>
-            )}
           </div>
 
           {/* Mobile menu button */}
@@ -253,31 +236,48 @@ const Navbar = () => {
                   >
                     FAQ
                   </a>
+
+                  {!hideConnectBtn && (
+                <ConnectButton
+                  showBalance={{
+                    smallScreen: false,
+                    largeScreen: true,
+                  }}
+                  accountStatus="address"
+                  chainStatus="icon"
+                  label="Connect Wallet"
+                />
+              )}
+
                 </>
               )}
-              
+
               {isProtectedPage && (
                 <>
-                  <Link 
-                    href="/dashboard" 
+                  <Link
+                    href="/dashboard"
                     className={`px-3 py-2 ${location === '/dashboard' ? 'text-bef-purple font-bold' : 'text-bef-black'}`}
                     onClick={toggleMenu}
                   >
                     Dashboard
                   </Link>
-                  <Link 
-                    href="/signup" 
-                    className={`px-3 py-2 ${location === '/signup' ? 'text-bef-purple font-bold' : 'text-bef-black'}`}
-                    onClick={toggleMenu}
-                  >
-                    Membership
-                  </Link>
+                  {!hideConnectBtn && (
+                    <ConnectButton
+                      showBalance={{
+                        smallScreen: false,
+                        largeScreen: true,
+                      }}
+                      accountStatus="address"
+                      chainStatus="icon"
+                      label="Connect Wallet"
+                    />
+                  )}
                 </>
               )}
-              
+
               {isAuthPage && (
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   className="text-bef-black hover:text-bef-purple justify-start px-3"
                   onClick={() => {
                     navigate.push('/');
@@ -288,35 +288,12 @@ const Navbar = () => {
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to Home
                 </Button>
+
               )}
+
               
-              {walletConnected ? (
-                <Button variant="outline" className="border-bef-purple text-bef-purple w-full"
-                title="Wallet Connected"
-                onClick={toggleMenu}>
-                  <Wallet className="mr-2 h-4 w-4" />
-                  {`${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}
-                </Button>
-              ) : (
-                <Button 
-                  className="bg-bef-purple hover:bg-bef-darkPurple w-full"
-                  onClick={handleConnectWallet}
-                  disabled={isConnecting}
-                  title="Connect Wallet"
-                >
-                  {isConnecting ? (
-                    <span className="flex items-center justify-center">
-                      <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"></span>
-                      Connecting...
-                    </span>
-                  ) : (
-                    <span className="flex items-center justify-center">
-                      <Wallet className="mr-2 h-4 w-4" />
-                      Connect Wallet
-                    </span>
-                  )}
-                </Button>
-              )}
+
+
             </div>
           </div>
         )}
