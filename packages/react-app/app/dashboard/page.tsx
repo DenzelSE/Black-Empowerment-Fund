@@ -18,7 +18,7 @@ import { useWeb3 } from '@/contexts/useWeb3';
 const DashboardPage = () => {
     const navigate = useRouter();
     const { toast } = useToast();
-    const {address, getUserAddress} = useWeb3();
+    const {address} = useWeb3();
     const [memberName, setMemberName] =  useState(address)// get address from local storage
     const [payoutMonth, setPayoutMonth] = useState(3); // 1-6
     const [currentMonth, setCurrentMonth] = useState(2); // 1-6
@@ -26,11 +26,6 @@ const DashboardPage = () => {
     const [treasuryValue, setTreasuryValue] = useState(3250);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        getUserAddress();
-    }, []);
-
-    // redirect to homepage if user disconnects
     
 
     useEffect(() => {

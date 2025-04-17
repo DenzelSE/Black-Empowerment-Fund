@@ -28,27 +28,6 @@ const Navbar = () => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const checkRegistration = async (address: string) => {
-    const registeredAddress = localStorage.getItem("walletAddress");
-    if (registeredAddress) {
-      toast(`Welcome back ${registeredAddress}`);
-      navigate.push("/dashboard");
-
-    } else {
-      toast.info("Please register your wallet address");
-      navigate.push("/signup");
-    }
-  }
-
-  // Check if wallet was previously connected
-  useEffect(() => {
-    const savedAddress = localStorage.getItem('walletAddress');
-    if (savedAddress) {
-      setWalletAddress(savedAddress);
-      setWalletConnected(true);
-    }
-  }, []);
-
   const connectWallet = async () => {
     setIsConnecting(true);
     try {
@@ -64,7 +43,6 @@ const Navbar = () => {
         setWalletConnected(true);
         localStorage.setItem("walletAddress", address);
         toast.success("Wallet connected successfully");
-        checkRegistration(address);
       } else {
         toast.error("Please install a web3 wallet like MetaMask");
       }
@@ -142,16 +120,16 @@ const Navbar = () => {
                 </a>
 
                 {!hideConnectBtn && (
-              <ConnectButton
-                showBalance={{
-                  smallScreen: false,
-                  largeScreen: true,
-                }}
-                accountStatus="address"
-                chainStatus="icon"
-                label="Connect Wallet"
-              />
-            )}
+                  <ConnectButton
+                    showBalance={{
+                      smallScreen: false,
+                      largeScreen: true,
+                    }}
+                    accountStatus="address"
+                    chainStatus="icon"
+                    label="Connect Wallet"
+                  />
+                )}
               </>
             )}
 
@@ -184,7 +162,7 @@ const Navbar = () => {
               </Button>
             )}
 
-            
+
           </div>
 
           {/* Mobile menu button */}
@@ -238,16 +216,16 @@ const Navbar = () => {
                   </a>
 
                   {!hideConnectBtn && (
-                <ConnectButton
-                  showBalance={{
-                    smallScreen: false,
-                    largeScreen: true,
-                  }}
-                  accountStatus="address"
-                  chainStatus="icon"
-                  label="Connect Wallet"
-                />
-              )}
+                    <ConnectButton
+                      showBalance={{
+                        smallScreen: false,
+                        largeScreen: true,
+                      }}
+                      accountStatus="address"
+                      chainStatus="icon"
+                      label="Connect Wallet"
+                    />
+                  )}
 
                 </>
               )}
@@ -291,7 +269,7 @@ const Navbar = () => {
 
               )}
 
-              
+
 
 
             </div>

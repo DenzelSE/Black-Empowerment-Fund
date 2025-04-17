@@ -22,64 +22,9 @@ const SignupPage = () => {
     const [step, setStep] = useState<"info" | "minting" | "success">("info");
     const [agreeToTerms, setAgreeToTerms] = useState(false);
     const router = useRouter();
-    const {address, isMember, getUserAddress, setIsMember} = useWeb3();
+    const {u_address} = useWeb3();
 
-    useEffect(() => {
-        const isRegistered = isMember;
-        if (isRegistered) {
-            router.push("/dashboard");
-        } else {
-            getUserAddress();
-        }
-    }
-    , [getUserAddress, router]);
 
-    const handleMint = async () => {
-        if (!agreeToTerms) {
-            toast.error("You must agree to the membership rules before minting");
-            return;
-        }
-
-        if (!address) {
-            alert("Please connect your wallet first");
-            return;
-        }
-
-        if (isMember) {
-            toast.error("You are already a member");
-            return;
-        }
-
-        setStep("minting");
-        setIsMinting(true);
-        setIsMember(true);
-
-        try {
-            // Simulate minting process with a timeout
-            toast.info("Minting your membership NFT...");
-
-            await new Promise((resolve) => setTimeout(resolve, 3000));
-
-            // Mock success
-            setStep("success");
-            toast.success("NFT minted successfully! Welcome to the stokvel.");
-
-            // Store that the user is registered 
-            localStorage.setItem("isRegistered", "true");
-
-            // After a delay, redirect to dashboard
-            setTimeout(() => {
-                router.push("/dashboard");
-            }, 2000);
-
-        } catch (error) {
-            console.error("Error minting NFT:", error);
-            toast.error("Failed to mint NFT. Please try again.");
-            setStep("info");
-        } finally {
-            setIsMinting(false);
-        }
-    };
 
     return (
         <main className="flex-grow py-12 md:py-20 bg-white relative">
@@ -329,7 +274,7 @@ const SignupPage = () => {
                   {step === "info" && (
                     <Button
                       className="w-full bg-bef-purple hover:bg-bef-darkPurple text-white"
-                      onClick={handleMint}
+                      onClick={() => {toast.info('Mint Membership NFT clicked');}}
                       disabled={isMinting || !agreeToTerms }
                       title="Mint Membership NFT"
                     >

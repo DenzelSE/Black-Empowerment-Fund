@@ -6,17 +6,9 @@ import { useWeb3 } from "@/contexts/useWeb3";
 import { useEffect } from "react";
 
 const Hero = () => {
-  const {address, isMember, getUserAddress} = useWeb3();
+  const {u_address} = useWeb3();
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchUserAddress = async () => {
-      await getUserAddress();
-    };
-
-    fetchUserAddress();
-  }
-  , [getUserAddress]);
 
   return (
     <section className="py-8 md:py-24 hero-pattern">
@@ -43,7 +35,7 @@ const Hero = () => {
                 <Button className="bg-bef-purple hover:bg-bef-darkPurple text-lg px-6 py-6 sm:w-full "
                 title="Join the Movement"
                 onClick={() => {
-                  if (address) {
+                  if (u_address) {
                     router.push("/signup");
                   } else {
                     alert("Please connect your wallet to join the movement.");
