@@ -99,5 +99,17 @@ describe("StokvelNFT", function() {
             await expect(stokvelNFT.ownerOf(tokenId)).to.be.revertedWithCustomError(stokvelNFT, "ERC721NonexistentToken");
         });
     });
+
+    describe("Addresses", function () {
+        it('Should set the right nft address on treasury', async function () {
+            const {stokvelNFT, stokvelTreasury, owner, addr1} = loadFixture(deployNFTFixture);
+
+            const NFTAddressOnTreasury = await stokvelTreasury.nftContract()
+            const NFTAddress = stokvelNFT.target;
+
+            await expect(NFTAddressOnTreasury.to.equal(NFTAddressOnTreasury))
+        })
+
+    } )
 })
 

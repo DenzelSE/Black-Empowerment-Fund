@@ -25,6 +25,11 @@ const celoPublicClient = createPublicClient({
     transport: http(),
 });
 
+const celoWalletClient = createWalletClient({
+    chain: celoAlfajores,
+    transport: custom(window.ethereum),
+});
+
 const befBFT_celo = getContract({
     abi: StokvelNFT.abi,
     address: StockvelNFTAddress,
@@ -39,25 +44,37 @@ const celoStable = getContract({
 
 
 export const useWeb3 = () => {
-    const { data: hash, writeContract } = useWriteContract()
     const account = useAccount();
     const u_address = account.address;
-    const [stableAllowance, setStableAllowance] = useState(0);
-
 
     // join stokvel function
     const joinStokvel = async () => {
-        let walletClient = createWalletClient({
-            transport: custom(window.ethereum),
-            chain: celoAlfajores,
-        });
-        const allowance = await getStableAllowance();
-        
+        let [address] = await celoWalletClient.getAddresses();
 
+        // const res = await celoWalletClient.writeContract({
+        //     address: StockvelNFTAddress,
+        //     abi: StokvelNFT.abi,
+        //     functionName: 'join',
+        //     args: [],
+        //     account: address,
+        // });
+        // return res;
+        try {
+            const { request } = await celoPublicClient.simulateContract({
+                address: StockvelNFTAddress,
+                abi: StokvelNFT.abi,
+                functionName: 'join',
+                account: u_address,
+              })
+
+              const hash = await celoWalletClient.writeContract(request)
+              
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     const getStableAllowance = async () => {
-
         const data = await celoPublicClient.readContract({
             address: BEFTokenAddress,
             abi: StableTokenABI.abi,
@@ -70,19 +87,31 @@ export const useWeb3 = () => {
         return user_allowance;
     }
 
-    const increaseStableAllowance = async (amount: number) => {
-        let walletClient = createWalletClient({
-            transport: custom(window.ethereum),
-            chain: celoAlfajores,
+    const mintTokens = async () => {
+        let [address] = await celoWalletClient.getAddresses();
+
+        const res = await celoWalletClient.writeContract({
+            address: BEFTokenAddress,
+            abi: StableTokenABI.abi,
+            functionName: 'mint',
+            args: [u_address],
+            account: address,
         });
 
-        let [address] = await walletClient.getAddresses();
+        return res;
 
-        const res = await walletClient.writeContract({
+
+    }
+
+    const increaseStableAllowance = async (amount: number) => {
+
+        let [address] = await celoWalletClient.getAddresses();
+
+        const res = await celoWalletClient.writeContract({
             address: BEFTokenAddress,
             abi: StableTokenABI.abi,
             functionName: 'approve',
-            args: [StockvelNFTAddress, parseEther(amount.toString())],
+            args: [StockvelNFTAddress, amount * 1e6],
             account: address,
         });
 
@@ -111,5 +140,7 @@ export const useWeb3 = () => {
         signTransaction,
         joinStokvel,
         getStableAllowance,
+        increaseStableAllowance,
+        mintTokens,
     };
 };
