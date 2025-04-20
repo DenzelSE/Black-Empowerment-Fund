@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import StableTokenABI from "./cusd-abi.json";
 import StokvelNFT from "./StockvelNFT.json"
 import StokvelTreasury from "./Treasury.json"
+import { BEFTokenAddress, StockvelNFTAddress, TreasuryAddress } from "../constants";
+
 import {
     createPublicClient,
     createWalletClient,
@@ -11,11 +13,13 @@ import {
     parseEther,
     stringToHex,
 } from "viem"; // low level shit
-import { celoAlfajores, hardhat } from "viem/chains"; // pretty shit
-import { useAccount, useWriteContract, useReadContract } from "wagmi";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { celoAlfajores, hardhat } from "viem/chains"; 
 
 
+import { useAccount, useWriteContract, useReadContract } from "wagmi"; // pretty shit
+
+
+// only used for read only transactions to the blockchain
 const celoPublicClient = createPublicClient({
     chain: celoAlfajores,
     transport: http(),
@@ -23,7 +27,7 @@ const celoPublicClient = createPublicClient({
 
 const befBFT_celo = getContract({
     abi: StokvelNFT.abi,
-    address: '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
+    address: StockvelNFTAddress,
     client: celoPublicClient,
 });
 
@@ -42,18 +46,24 @@ export const useWeb3 = () => {
         });
         let [address] = await walletClient.getAddresses();
 
-        // check user token allowance. Make sure it's over 1000
+        try {
+            const res = await walletClient.writeContract({
+                address: StockvelNFTAddress,
+                abi: StokvelNFT.abi,
+                functionName: 'join',
+                args: [],
+                account: address,
+            });
+
+            console.log("res", res);
+            return res;
+
+        } catch (error) {
+            console.log("error", error);
+        }
         
 
-        const res = await walletClient.writeContract({
-            address: '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
-            abi: StokvelNFT.abi,
-            functionName: 'join',
-            args: [],
-            account: address,
-        });
-
-        return res;
+        
         
 
     }

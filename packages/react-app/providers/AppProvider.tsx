@@ -12,7 +12,6 @@ import { celo, celoAlfajores } from 'wagmi/chains';
 
 import Layout from '../components/Layout';
 import { injectedWallet, metaMaskWallet, valoraWallet } from '@rainbow-me/rainbowkit/wallets';
-import { hardhat } from '@/lib/chains';
 
 const connectors = connectorsForWallets(
   [
@@ -29,11 +28,10 @@ const connectors = connectorsForWallets(
 
 const config = createConfig({
   connectors,
-  chains: [celo, celoAlfajores, hardhat],
+  chains: [celo, celoAlfajores],
   transports: {
     [celo.id]: http(),
     [celoAlfajores.id]: http(),
-    [hardhat.id]: http('http://127.0.0.1:8545'),
   },
 });
 

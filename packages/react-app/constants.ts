@@ -1,0 +1,5 @@
+export const BEFTokenAddress = "0x3254b3Af489AA90B2CABcD242b20151D72E21820" 
+
+export const StockvelNFTAddress = "0x44d2849691362d2B9E137274536B773ee08f1315" 
+
+export const TreasuryAddress ="0x68560D9aEfbAe1FfEaC918FD2ED35Dd766173143" 
