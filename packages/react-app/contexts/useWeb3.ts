@@ -31,11 +31,18 @@ const befBFT_celo = getContract({
     client: celoPublicClient,
 });
 
+const celoStable = getContract({
+    abi: StableTokenABI.abi,
+    address: BEFTokenAddress,
+    client: celoPublicClient,
+});
+
 
 export const useWeb3 = () => {
     const { data: hash, writeContract } = useWriteContract()
     const account = useAccount();
     const u_address = account.address;
+    const [stableAllowance, setStableAllowance] = useState(0);
 
 
     // join stokvel function
@@ -44,28 +51,42 @@ export const useWeb3 = () => {
             transport: custom(window.ethereum),
             chain: celoAlfajores,
         });
+        const allowance = await getStableAllowance();
+        
+
+    }
+
+    const getStableAllowance = async () => {
+
+        const data = await celoPublicClient.readContract({
+            address: BEFTokenAddress,
+            abi: StableTokenABI.abi,
+            functionName: 'allowance',
+            args: [u_address, StockvelNFTAddress],
+          })
+        
+          const user_allowance = parseFloat((data as bigint).toString()) / 1e6;
+
+        return user_allowance;
+    }
+
+    const increaseStableAllowance = async (amount: number) => {
+        let walletClient = createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
+        });
+
         let [address] = await walletClient.getAddresses();
 
-        try {
-            const res = await walletClient.writeContract({
-                address: StockvelNFTAddress,
-                abi: StokvelNFT.abi,
-                functionName: 'join',
-                args: [],
-                account: address,
-            });
+        const res = await walletClient.writeContract({
+            address: BEFTokenAddress,
+            abi: StableTokenABI.abi,
+            functionName: 'approve',
+            args: [StockvelNFTAddress, parseEther(amount.toString())],
+            account: address,
+        });
 
-            console.log("res", res);
-            return res;
-
-        } catch (error) {
-            console.log("error", error);
-        }
-        
-
-        
-        
-
+        return res;
     }
 
     const signTransaction = async () => {
@@ -89,5 +110,6 @@ export const useWeb3 = () => {
         account,
         signTransaction,
         joinStokvel,
+        getStableAllowance,
     };
 };

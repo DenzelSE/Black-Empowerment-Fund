@@ -14,6 +14,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useWeb3 } from "@/contexts/useWeb3";
+import { useReadContract } from "wagmi";
+import StableTokenABI from "@/contexts/cusd-abi.json";
+import StokvelNFT from "@/contexts/StockvelNFT.json"
+import { BEFTokenAddress, StockvelNFTAddress } from "@/constants";
 
 // import { redirect } from "next/dist/server/api-utils";
 
@@ -22,7 +26,67 @@ const SignupPage = () => {
     const [step, setStep] = useState<"info" | "minting" | "success">("info");
     const [agreeToTerms, setAgreeToTerms] = useState(false);
     const router = useRouter();
-    const {u_address, account, joinStokvel} = useWeb3();
+    const {u_address, account, joinStokvel, getStableAllowance} = useWeb3();
+    const [allowance, setAllowance] = useState(0);
+
+    
+
+    const handleMint = async () => {
+      if (!agreeToTerms) {
+          toast.error("You must agree to the membership rules before minting");
+          return;
+      }
+
+      if (!u_address) {
+          alert("Please connect your wallet first");
+          return;
+      }
+      setStep("minting");
+      setIsMinting(true);
+      // setIsMember(true);
+
+      try {
+          // Simulate minting process with a timeout
+          toast.info("Minting your membership NFT...");
+          const allowance = await getStableAllowance();
+          if( allowance < 1000) {
+            toast.error("You need to approve at least R1000 to mint the NFT");
+            setStep("info");
+            return;
+          }
+          // const {data, isError, isPending, isSuccess} = useReadContract({
+          //   abi: StableTokenABI.abi,
+          //   address: BEFTokenAddress,
+          //   functionName: 'allowance',
+          //   args: [u_address, StockvelNFTAddress],
+          //   account: u_address,
+          // })
+
+          // console.log("data", data);
+
+          // await new Promise((resolve) => setTimeout(resolve, 3000));
+          // handleJoinStokvel();
+
+          // // Mock success
+          // // setStep("success");
+          // // toast.success("NFT minted successfully! Welcome to the stokvel.");
+
+          // // Store that the user is registered 
+          // localStorage.setItem("isRegistered", "true");
+
+          // After a delay, redirect to dashboard
+          setTimeout(() => {
+            setIsMinting(false);
+          }, 200);
+
+      } catch (error) {
+          console.error("Error minting NFT:", error);
+          toast.error("Failed to mint NFT. Please try again.");
+          setStep("info");
+      } finally {
+          setIsMinting(false);
+      }
+  };
 
     // function to mint the nft
     const handleJoinStokvel = async () => {
@@ -295,7 +359,7 @@ const SignupPage = () => {
                   {step === "info" && (
                     <Button
                       className="w-full bg-bef-purple hover:bg-bef-darkPurple text-white"
-                      onClick={handleJoinStokvel}
+                      onClick={handleMint}
                       disabled={isMinting || !agreeToTerms }
                       title="Mint Membership NFT"
                     >
