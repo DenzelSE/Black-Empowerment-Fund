@@ -22,7 +22,28 @@ const SignupPage = () => {
     const [step, setStep] = useState<"info" | "minting" | "success">("info");
     const [agreeToTerms, setAgreeToTerms] = useState(false);
     const router = useRouter();
-    const {u_address} = useWeb3();
+    const {u_address, account, joinStokvel} = useWeb3();
+
+    // function to mint the nft
+    const handleJoinStokvel = async () => {
+      
+      const minted = await joinStokvel();
+      console.log("Minted: ", minted);
+      // if (minted) {
+      //   setStep("minting");
+      //   toast.success("Minting your NFT...");
+      //   setTimeout(() => {
+      //     setStep("success");
+      //     toast.success("NFT minted successfully!");
+      //     router.push("/dashboard");
+      //   }, 2000);
+      // }
+      // else {
+      //   toast.error("Minting failed. Please try again.");
+      // }
+    
+    }
+
 
 
 
@@ -220,7 +241,7 @@ const SignupPage = () => {
                           <ul className="mt-2 space-y-1 text-sm">
                             <li className="flex justify-between">
                               <span className="text-gray-500">Blockchain:</span>
-                              <span>Polygon</span>
+                              <span>{account.chain?.toString() || "Unknown"}</span>
                             </li>
                             <li className="flex justify-between">
                               <span className="text-gray-500">Mint Price:</span>
@@ -274,7 +295,7 @@ const SignupPage = () => {
                   {step === "info" && (
                     <Button
                       className="w-full bg-bef-purple hover:bg-bef-darkPurple text-white"
-                      onClick={() => {toast.info('Mint Membership NFT clicked');}}
+                      onClick={handleJoinStokvel}
                       disabled={isMinting || !agreeToTerms }
                       title="Mint Membership NFT"
                     >
@@ -283,9 +304,9 @@ const SignupPage = () => {
                     </Button>
                   )}
                   
-                  <div className="text-xs text-center text-gray-400">
+                  {/* <div className="text-xs text-center text-gray-400">
                     <p>For demo purposes: The NFT minting is simulated</p>
-                  </div>
+                  </div> */}
                 </CardFooter>
               </Card>
             </div>
