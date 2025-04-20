@@ -20,7 +20,7 @@ async function DeployNoParams(contractName: string) {
 
 async function main() {
     
-    // Deploy Mock Stable coin
+    // Deploy all contracts
     const mockStableCoin = await DeployNoParams("BlackEconomicFundTestToken");
     const stokvelNFT = await DeployWithParams("StockvelNFT",mockStableCoin.target, mockStableCoin.target);
     const stokvelTreasury = await DeployWithParams("Treasury",mockStableCoin.target, stokvelNFT.target);
