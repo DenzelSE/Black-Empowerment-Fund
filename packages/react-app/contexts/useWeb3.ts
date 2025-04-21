@@ -27,7 +27,7 @@ const celoPublicClient = createPublicClient({
 
 const celoWalletClient = createWalletClient({
     chain: celoAlfajores,
-    transport: custom(window.ethereum),
+    transport: http(),
 });
 
 const befBFT_celo = getContract({
@@ -68,7 +68,7 @@ export const useWeb3 = () => {
               })
 
               const hash = await celoWalletClient.writeContract(request)
-              
+
         } catch (e) {
             console.error(e)
         }

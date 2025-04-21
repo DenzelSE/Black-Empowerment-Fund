@@ -24,10 +24,6 @@ async function main() {
     const mockStableCoin = await DeployNoParams("BlackEconomicFundTestToken");
     const stokvelNFT = await DeployWithParams("StockvelNFT",mockStableCoin.target, mockStableCoin.target);
     const stokvelTreasury = await DeployWithParams("Treasury", stokvelNFT.target, mockStableCoin.target);
-
-    console.log('NFT Contract Address', stokvelNFT.target)
-    console.log("NFT Address on Treasury",await stokvelTreasury.nftContract())
-
     // call change treasury on nft contract
     const tx = await stokvelNFT.updateTreasury(stokvelTreasury.target);
     await tx.wait();

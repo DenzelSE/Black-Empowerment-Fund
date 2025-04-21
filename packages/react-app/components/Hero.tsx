@@ -37,6 +37,7 @@ const Hero = () => {
                 onClick={() => {
                   if (u_address) {
                     router.push("/signup");
+                    alert(u_address)
                   } else {
                     alert("Please connect your wallet to join the movement.");
                   }

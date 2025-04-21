@@ -1,8 +1,6 @@
 'use client'
 
 import { useEffect, useState } from "react";
-// import Navbar from "@/components/Navbar";
-// import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,12 +12,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useWeb3 } from "@/contexts/useWeb3";
-import { useReadContract } from "wagmi";
 import StableTokenABI from "@/contexts/cusd-abi.json";
 import StokvelNFT from "@/contexts/StockvelNFT.json"
 import { BEFTokenAddress, StockvelNFTAddress } from "@/constants";
-
-// import { redirect } from "next/dist/server/api-utils";
 
 const SignupPage = () => {
   const [isMinting, setIsMinting] = useState(false);
@@ -43,10 +38,8 @@ const SignupPage = () => {
     }
     setStep("minting");
     setIsMinting(true);
-    // setIsMember(true);
 
     try {
-      // Simulate minting process with a timeout
       toast.info("Minting your membership NFT...");
       const allowance = await getStableAllowance();
       console.log("allowance", allowance);
@@ -66,26 +59,6 @@ const SignupPage = () => {
         console.log("TX", tx)
         toast.success("Minting your membership NFT...");
       }
-
-      // const {data, isError, isPending, isSuccess} = useReadContract({
-      //   abi: StableTokenABI.abi,
-      //   address: BEFTokenAddress,
-      //   functionName: 'allowance',
-      //   args: [u_address, StockvelNFTAddress],
-      //   account: u_address,
-      // })
-
-      // console.log("data", data);
-
-      // await new Promise((resolve) => setTimeout(resolve, 3000));
-      // handleJoinStokvel();
-
-      // // Mock success
-      // // setStep("success");
-      // // toast.success("NFT minted successfully! Welcome to the stokvel.");
-
-      // // Store that the user is registered 
-      // localStorage.setItem("isRegistered", "true");
 
       // After a delay, redirect to dashboard
       setTimeout(() => {
@@ -115,10 +88,6 @@ const SignupPage = () => {
             <Badge variant="outline" className="text-bef-purple border-bef-purple px-3 py-1.5 text-sm">
               Limited Spots Available
             </Badge>
-
-            <button onClick={mintTokens} className="bg-red m-auto ">
-              Mint Tokens
-            </button>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-pulse-slow">
             Join the <span className="gradient-text">Financial Revolution</span>
