@@ -16,7 +16,7 @@ import {
 import { celoAlfajores, hardhat } from "viem/chains"; 
 
 
-import { useAccount, useWriteContract, useReadContract } from "wagmi"; // pretty shit
+import { useAccount, useWriteContract, useReadContract } from "wagmi"; // pretty shit, pretty useless unless in a component
 
 
 // only used for read only transactions to the blockchain
@@ -27,7 +27,7 @@ const celoPublicClient = createPublicClient({
 
 const celoWalletClient = createWalletClient({
     chain: celoAlfajores,
-    transport: http(),
+    transport: custom(window.ethereum),
 });
 
 const befBFT_celo = getContract({
@@ -49,16 +49,6 @@ export const useWeb3 = () => {
 
     // join stokvel function
     const joinStokvel = async () => {
-        let [address] = await celoWalletClient.getAddresses();
-
-        // const res = await celoWalletClient.writeContract({
-        //     address: StockvelNFTAddress,
-        //     abi: StokvelNFT.abi,
-        //     functionName: 'join',
-        //     args: [],
-        //     account: address,
-        // });
-        // return res;
         try {
             const { request } = await celoPublicClient.simulateContract({
                 address: StockvelNFTAddress,
@@ -68,9 +58,10 @@ export const useWeb3 = () => {
               })
 
               const hash = await celoWalletClient.writeContract(request)
+              return hash;
 
         } catch (e) {
-            console.error(e)
+            alert(e);
         }
     }
 

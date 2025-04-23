@@ -18,7 +18,7 @@ import { BEFTokenAddress, StockvelNFTAddress } from "@/constants";
 
 const SignupPage = () => {
   const [isMinting, setIsMinting] = useState(false);
-  const [step, setStep] = useState<"info" | "minting" | "success" | "approve allowance">("info");
+  const [step, setStep] = useState<"info" | "minting" | "success" | "approve allowance" | "error">("info");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const router = useRouter();
   const { u_address, account, joinStokvel, getStableAllowance, increaseStableAllowance, mintTokens } = useWeb3();
@@ -43,27 +43,32 @@ const SignupPage = () => {
       toast.info("Minting your membership NFT...");
       const allowance = await getStableAllowance();
       console.log("allowance", allowance);
-      if (allowance < 1000) {
-        setIsMinting(false);
-        toast.error("You need to approve at least R1000 to mint the NFT");
-        setStep("approve allowance");
-        const tx = await increaseStableAllowance((1000 - allowance));
-        setStep("minting");
-        const minttx = await joinStokvel()
-        console.log(minttx)
-        console.log("tx", tx);
-        return;
-      } else {
-        setStep("minting");
-        const tx = await joinStokvel();
-        console.log("TX", tx)
-        toast.success("Minting your membership NFT...");
-      }
+      const tx = await increaseStableAllowance((1000 - allowance));
+      console.log("tx", tx);
 
-      // After a delay, redirect to dashboard
-      setTimeout(() => {
-        setIsMinting(false);
-      }, 200);
+      // if (allowance < 1000) {
+      //   setIsMinting(false);
+      //   // toast.error("You need to approve at least R1000 to mint the NFT");
+      //   setStep("approve allowance");
+      //   const tx = await increaseStableAllowance((1000 - allowance));
+      //   setStep("minting");
+      //   const minttx = await joinStokvel()
+      //   if (minttx === undefined) {
+      //     toast.error("Transaction failed. Please try again.");
+      //     setStep("info");
+      //     return;
+      //   }
+      //   console.log("Mint tx", minttx);
+      //   return;
+      // } else {
+      //   setStep("minting");
+      //   const tx = await joinStokvel();
+      //   if (tx === undefined) {
+      //     toast.error("Transaction failed. Please try again.");
+      //     setStep("info");
+      //     return;
+      //   }
+      // }
 
     } catch (error) {
       console.error("Error minting NFT:", error);
