@@ -13,10 +13,10 @@ import {
     parseEther,
     stringToHex,
 } from "viem"; // low level shit
-import { celoAlfajores, hardhat } from "viem/chains"; 
+import { celoAlfajores } from "viem/chains"; 
 
 
-import { useAccount, useWriteContract, useReadContract } from "wagmi"; // pretty shit, pretty useless unless in a component
+import { useAccount } from "wagmi"; // pretty shit, pretty useless unless in a component
 
 
 // only used for read only transactions to the blockchain
@@ -25,10 +25,7 @@ const celoPublicClient = createPublicClient({
     transport: http(),
 });
 
-const celoWalletClient = createWalletClient({
-    chain: celoAlfajores,
-    transport: custom(window.ethereum),
-});
+
 
 const befBFT_celo = getContract({
     abi: StokvelNFT.abi,
@@ -47,8 +44,18 @@ export const useWeb3 = () => {
     const account = useAccount();
     const u_address = account.address;
 
+    // const celoWalletClient = createWalletClient({
+    //     chain: celoAlfajores,
+    //     transport: custom(window.ethereum),
+    // });
+
     // join stokvel function
     const joinStokvel = async () => {
+
+        let celoWalletClient = createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
+        });
         try {
             const { request } = await celoPublicClient.simulateContract({
                 address: StockvelNFTAddress,
@@ -79,6 +86,12 @@ export const useWeb3 = () => {
     }
 
     const mintTokens = async () => {
+
+        let celoWalletClient = createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
+        });
+        
         let [address] = await celoWalletClient.getAddresses();
 
         const res = await celoWalletClient.writeContract({
@@ -96,9 +109,13 @@ export const useWeb3 = () => {
 
     const increaseStableAllowance = async (amount: number) => {
 
-        let [address] = await celoWalletClient.getAddresses();
+        let walletClient = createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
+        });
+        let [address] = await walletClient.getAddresses();
 
-        const res = await celoWalletClient.writeContract({
+        const res = await walletClient.writeContract({
             address: BEFTokenAddress,
             abi: StableTokenABI.abi,
             functionName: 'approve',

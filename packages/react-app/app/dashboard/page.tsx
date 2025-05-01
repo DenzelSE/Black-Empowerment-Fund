@@ -18,8 +18,8 @@ import { useWeb3 } from '@/contexts/useWeb3';
 const DashboardPage = () => {
     const navigate = useRouter();
     const { toast } = useToast();
-    const {address} = useWeb3();
-    const [memberName, setMemberName] =  useState(address)// get address from local storage
+    const {u_address} = useWeb3();
+    const [memberName, setMemberName] =  useState(u_address)// get address from local storage
     const [payoutMonth, setPayoutMonth] = useState(3); // 1-6
     const [currentMonth, setCurrentMonth] = useState(2); // 1-6
     const [totalContributions, setTotalContributions] = useState(2000);
@@ -157,7 +157,7 @@ const DashboardPage = () => {
                         <>
                             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 animate-fade-in">
                                 <div>
-                                    <h1 className="text-2xl md:text-3xl font-bold mb-2">Welcome, {address?.slice(0,10)}</h1>
+                                    <h1 className="text-2xl md:text-3xl font-bold mb-2">Welcome, {u_address?.slice(0,10)}</h1>
                                     <p className="text-gray-500">
                                         Member since March 2025 • NFT ID: #1234
                                     </p>

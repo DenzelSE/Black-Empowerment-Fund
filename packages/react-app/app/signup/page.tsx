@@ -46,29 +46,29 @@ const SignupPage = () => {
       const tx = await increaseStableAllowance((1000 - allowance));
       console.log("tx", tx);
 
-      // if (allowance < 1000) {
-      //   setIsMinting(false);
-      //   // toast.error("You need to approve at least R1000 to mint the NFT");
-      //   setStep("approve allowance");
-      //   const tx = await increaseStableAllowance((1000 - allowance));
-      //   setStep("minting");
-      //   const minttx = await joinStokvel()
-      //   if (minttx === undefined) {
-      //     toast.error("Transaction failed. Please try again.");
-      //     setStep("info");
-      //     return;
-      //   }
-      //   console.log("Mint tx", minttx);
-      //   return;
-      // } else {
-      //   setStep("minting");
-      //   const tx = await joinStokvel();
-      //   if (tx === undefined) {
-      //     toast.error("Transaction failed. Please try again.");
-      //     setStep("info");
-      //     return;
-      //   }
-      // }
+      if (allowance < 1000) {
+        setIsMinting(false);
+        // toast.error("You need to approve at least R1000 to mint the NFT");
+        setStep("approve allowance");
+        const tx = await increaseStableAllowance((1000 - allowance));
+        setStep("minting");
+        const minttx = await joinStokvel()
+        if (minttx === undefined) {
+          toast.error("Transaction failed. Please try again.");
+          setStep("info");
+          return;
+        }
+        console.log("Mint tx", minttx);
+        return;
+      } else {
+        setStep("minting");
+        const tx = await joinStokvel();
+        if (tx === undefined) {
+          toast.error("Transaction failed. Please try again.");
+          setStep("info");
+          return;
+        }
+      }
 
     } catch (error) {
       console.error("Error minting NFT:", error);
