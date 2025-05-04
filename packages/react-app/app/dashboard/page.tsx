@@ -98,23 +98,23 @@ const DashboardPage = () => {
                             <Home className="h-5 w-5 mr-3" />
                             Dashboard
                         </Link>
-                        <Link href="#" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="/payouts" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <Wallet className="h-5 w-5 mr-3" />
                             My Payouts
                         </Link>
-                        <Link href="#" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="/treasury" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <PiggyBank className="h-5 w-5 mr-3" />
                             Treasury
                         </Link>
-                        <Link href="#" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="/investments" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <BarChart3 className="h-5 w-5 mr-3" />
                             Investments
                         </Link>
-                        <Link href="#" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="proposals" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <Vote className="h-5 w-5 mr-3" />
                             Proposals
                         </Link>
-                        <Link href="#" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="members" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <Users className="h-5 w-5 mr-3" />
                             Members
                         </Link>
