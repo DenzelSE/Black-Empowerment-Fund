@@ -233,6 +233,25 @@ export const useWeb3 = () => {
         return Mdata;
     }
 
+    const hasContributed = async () => {
+        
+        let celoWalletClient = createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
+        });
+        
+        let [address] = await celoWalletClient.getAddresses();
+
+        const res = await celoPublicClient.readContract({
+            address: TreasuryAddress,
+            abi: Treasury.abi,
+            functionName: 'hasContributed',
+            account: address,
+          });
+
+          return res;
+    }
+
     return {
         u_address,
         account,
