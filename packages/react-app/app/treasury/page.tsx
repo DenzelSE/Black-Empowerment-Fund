@@ -1,14 +1,87 @@
+'use client'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowUpRight, TrendingUp, PiggyBank } from "lucide-react"
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button1"
+import {
+  Home, LogOut, Wallet, PiggyBank, BarChart3, Calendar,
+  TrendingUp, ArrowUpRight, ArrowDownRight, Landmark, Radio, Vote,
+  Clock,Users 
+} from "lucide-react";
+import Link from "next/link"
 
 export default function TreasuryPage() {
-  return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Treasury</h1>
+  const navigate = useRouter();
+  const { toast } = useToast();
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+const handleLogout = () => {
+  toast({
+      title: "Logged out",
+      description: "You have successfully logged out.",
+  });
+  navigate.push("/");
+};
+
+
+  return (
+    <div className="flex h-screen overflow-hidden bg-gray-50 gap-4">
+    {/* Sidebar */}
+    <div className="hidden md:flex w-64 flex-col bg-bef-black text-white animate-fade-in">
+  <div className="flex items-center justify-center h-16 border-b border-white/10 px-4">
+      <h1 className="text-xl font-bold">
+          <span className="text-bef-gold">BEF</span> Stokvel
+      </h1>
+  </div>
+
+  <div className=" flex-grow p-4 space-y-4">
+      <div className="flex flex-col space-y-1 animate-fade-in">
+          <Link href="/dashboard" className="flex items-center px-4 py-2 rounded-lg bg-white/10 text-white">
+              <Home className="h-5 w-5 mr-3" />
+              Dashboard
+          </Link>
+          <Link href="/payouts" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+              <Wallet className="h-5 w-5 mr-3" />
+              My Payouts
+          </Link>
+          <Link href="/treasury" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+              <PiggyBank className="h-5 w-5 mr-3" />
+              Treasury
+          </Link>
+          <Link href="/investments" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+              <BarChart3 className="h-5 w-5 mr-3" />
+              Investments
+          </Link>
+          <Link href="/proposals" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+              <Vote className="h-5 w-5 mr-3" />
+              Proposals
+          </Link>
+          <Link href="/members" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+              <Users className="h-5 w-5 mr-3" />
+              Members
+          </Link>
+      </div>
+
+      <div className="mt-auto">
+          <Button
+              variant="outline"
+              className="w-full border-white/20 text-black hover:bg-white/10 hover:text-white"
+              onClick={handleLogout}
+              title='Logout'
+          >
+              <LogOut className="h-4 w-4 mr-2 text-black" /> Logout
+          </Button>
+      </div>
+  </div>
+</div>
+
+
+
+      <Tabs defaultValue="allocation" className="w-full py-4">
+  
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Treasury Value</CardTitle>
@@ -35,7 +108,6 @@ export default function TreasuryPage() {
         </Card>
       </div>
 
-      <Tabs defaultValue="allocation" className="w-full">
         <TabsList>
           <TabsTrigger value="allocation">Allocation</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>

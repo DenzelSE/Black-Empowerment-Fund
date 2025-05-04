@@ -64,7 +64,7 @@ export default function PayoutsPage() {
                     <div className="mt-auto">
                         <Button
                             variant="outline"
-                            className="w-full border-white/20 text-white hover:bg-white/10 hover:text-white"
+                            className="w-full border-white/20 text-black hover:bg-white/10 hover:text-white"
                             onClick={handleLogout}
                             title='Logout'
                         >
@@ -74,9 +74,11 @@ export default function PayoutsPage() {
                 </div>
             </div>
 
+
+      <div className="space-y-4 py-4 ">
+          <h1 className="text-2xl font-bold">My Payouts</h1>
       <Card className="mb-6">
         <CardHeader>
-          <h1 className="text-2xl font-bold">My Payouts</h1>
           <CardTitle>Your Next Payout</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -94,8 +96,6 @@ export default function PayoutsPage() {
           <Button className="w-full bg-purple-600 hover:bg-purple-700">Set Payment Method</Button>
         </CardContent>
       </Card>
-
-      <div className="space-y-4 ">
       <h2 className="text-xl font-bold ">Payout Schedule</h2>
         {[
           { month: 1, member: "John D.", amount: "R3,000", status: "Completed", date: "April 2025" },

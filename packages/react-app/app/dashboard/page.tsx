@@ -123,11 +123,11 @@ const DashboardPage = () => {
                     <div className="mt-auto">
                         <Button
                             variant="outline"
-                            className="w-full border-white/20 text-white hover:bg-white/10 hover:text-white"
+                            className="w-full border-white/20 text-black hover:bg-white/10 hover:text-white"
                             onClick={handleLogout}
                             title='Logout'
                         >
-                            <LogOut className="h-4 w-4 mr-2" /> Logout
+                            <LogOut className="h-4 w-4 mr-2 text-black" /> Logout
                         </Button>
                     </div>
                 </div>

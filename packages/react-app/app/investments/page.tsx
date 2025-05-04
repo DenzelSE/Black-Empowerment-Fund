@@ -65,7 +65,7 @@ export default function InvestmentsPage() {
       <div className="mt-auto">
           <Button
               variant="outline"
-              className="w-full border-white/20 text-white hover:bg-white/10 hover:text-white"
+              className="w-full border-white/20 text-black hover:bg-white/10 hover:text-white"
               onClick={handleLogout}
               title='Logout'
           >
@@ -76,13 +76,7 @@ export default function InvestmentsPage() {
 </div>
 
 
-      <Tabs defaultValue="portfolio" className="w-full">
-      <h1 className="text-2xl font-bold">Investments</h1>
-        <TabsList>
-          <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
-          <TabsTrigger value="opportunities">Opportunities</TabsTrigger>
-          <TabsTrigger value="history">History</TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="portfolio" className="w-full py-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium">Total Investment Value</CardTitle>
@@ -96,6 +90,11 @@ export default function InvestmentsPage() {
           </div>
         </CardContent>
       </Card>
+        <TabsList>
+          <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
+          <TabsTrigger value="opportunities">Opportunities</TabsTrigger>
+          <TabsTrigger value="history">History</TabsTrigger>
+        </TabsList>
 
         <TabsContent value="portfolio" className="space-y-6">
           <Card className="mt-6">
