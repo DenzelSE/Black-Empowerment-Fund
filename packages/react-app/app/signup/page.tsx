@@ -21,12 +21,22 @@ const SignupPage = () => {
   const [step, setStep] = useState<"info" | "minting" | "success" | "approve allowance" | "error">("info");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const router = useRouter();
-  const { u_address, account, joinStokvel, getStableAllowance, increaseStableAllowance, mintTokens } = useWeb3();
+  const { u_address, account, joinStokvel, getStableAllowance, increaseStableAllowance, mintTokens, hasJoined} = useWeb3();
 
-
-
-
-  const handleMint = async () => {
+  useEffect(() => {
+    const checkUserJoined = async () => {
+        const joined = await hasJoined();
+        console.log("joined :", joined)
+        
+        if(joined){
+          router.push('/dashboard')
+        } 
+      }
+      checkUserJoined();
+    }
+  );  
+      const handleMint = async () => {
+    
     if (!agreeToTerms) {
       toast.error("You must agree to the membership rules before minting");
       return;
@@ -59,6 +69,8 @@ const SignupPage = () => {
           return;
         }
         console.log("Mint tx", minttx);
+        router.push('/dashboard')
+        
         return;
       } else {
         setStep("minting");
@@ -365,3 +377,7 @@ const SignupPage = () => {
 }
 
 export default SignupPage
+function checkUserJoined() {
+  throw new Error("Function not implemented.");
+}
+
