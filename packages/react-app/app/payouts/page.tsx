@@ -24,7 +24,7 @@ export default function PayoutsPage() {
     navigate.push("/");
 };
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden bg-gray-50 gap-8">
                   {/* Sidebar */}
                   <div className="hidden md:flex w-64 flex-col bg-bef-black text-white animate-fade-in">
                 <div className="flex items-center justify-center h-16 border-b border-white/10 px-4">
