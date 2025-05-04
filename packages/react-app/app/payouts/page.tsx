@@ -1,14 +1,82 @@
+'use client'
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button1"
-import { Calendar, Clock } from "lucide-react"
+import { Button } from "@/components/ui/button1";
+import { useRouter } from 'next/navigation';
+import {
+  Home, LogOut, Wallet, PiggyBank, BarChart3, Users, Calendar,
+  TrendingUp, ArrowUpRight, ArrowDownRight, Landmark, Radio, Vote,
+  Clock
+} from "lucide-react";
+import Link from 'next/link';
+import { useToast } from "@/hooks/use-toast";
 
 export default function PayoutsPage() {
+    const navigate = useRouter();
+    const { toast } = useToast();
+
+
+  const handleLogout = () => {
+    toast({
+        title: "Logged out",
+        description: "You have successfully logged out.",
+    });
+    navigate.push("/");
+};
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">My Payouts</h1>
+    <div className="flex h-screen overflow-hidden bg-gray-50">
+                  {/* Sidebar */}
+                  <div className="hidden md:flex w-64 flex-col bg-bef-black text-white animate-fade-in">
+                <div className="flex items-center justify-center h-16 border-b border-white/10 px-4">
+                    <h1 className="text-xl font-bold">
+                        <span className="text-bef-gold">BEF</span> Stokvel
+                    </h1>
+                </div>
+
+                <div className="flex flex-col flex-grow p-4 space-y-4">
+                    <div className="flex flex-col space-y-1 animate-fade-in">
+                        <Link href="/dashboard" className="flex items-center px-4 py-2 rounded-lg bg-white/10 text-white">
+                            <Home className="h-5 w-5 mr-3" />
+                            Dashboard
+                        </Link>
+                        <Link href="/payouts" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                            <Wallet className="h-5 w-5 mr-3" />
+                            My Payouts
+                        </Link>
+                        <Link href="/treasury" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                            <PiggyBank className="h-5 w-5 mr-3" />
+                            Treasury
+                        </Link>
+                        <Link href="/investments" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                            <BarChart3 className="h-5 w-5 mr-3" />
+                            Investments
+                        </Link>
+                        <Link href="/proposals" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                            <Vote className="h-5 w-5 mr-3" />
+                            Proposals
+                        </Link>
+                        <Link href="/members" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                            <Users className="h-5 w-5 mr-3" />
+                            Members
+                        </Link>
+                    </div>
+
+                    <div className="mt-auto">
+                        <Button
+                            variant="outline"
+                            className="w-full border-white/20 text-white hover:bg-white/10 hover:text-white"
+                            onClick={handleLogout}
+                            title='Logout'
+                        >
+                            <LogOut className="h-4 w-4 mr-2" /> Logout
+                        </Button>
+                    </div>
+                </div>
+            </div>
 
       <Card className="mb-6">
         <CardHeader>
+          <h1 className="text-2xl font-bold">My Payouts</h1>
           <CardTitle>Your Next Payout</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -27,8 +95,8 @@ export default function PayoutsPage() {
         </CardContent>
       </Card>
 
-      <h2 className="text-xl font-semibold">Payout Schedule</h2>
-      <div className="space-y-4">
+      <div className="space-y-4 ">
+      <h2 className="text-xl font-bold ">Payout Schedule</h2>
         {[
           { month: 1, member: "John D.", amount: "R3,000", status: "Completed", date: "April 2025" },
           { month: 2, member: "Sarah M.", amount: "R3,000", status: "Completed", date: "May 2025" },

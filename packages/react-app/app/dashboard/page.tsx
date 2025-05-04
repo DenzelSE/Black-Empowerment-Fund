@@ -110,11 +110,11 @@ const DashboardPage = () => {
                             <BarChart3 className="h-5 w-5 mr-3" />
                             Investments
                         </Link>
-                        <Link href="proposals" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="/proposals" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <Vote className="h-5 w-5 mr-3" />
                             Proposals
                         </Link>
-                        <Link href="members" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="/members" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <Users className="h-5 w-5 mr-3" />
                             Members
                         </Link>

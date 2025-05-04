@@ -1,5 +1,5 @@
-export const BEFTokenAddress = "0x00083Ac5058DE71c6A50fbc456BE5277c262C7EE" 
+export const BEFTokenAddress = "0x4786A635cdD46c2f5327563434AEd303F6aEF757" 
 
-export const StockvelNFTAddress = "0x28f3982cd83c3FB173012D5567F187183168aD56" 
+export const StockvelNFTAddress = "0x665f73339Ba5Bcc5032b5a86d354826C87d2cCde" 
 
-export const TreasuryAddress ="0xb76179EB6c85e45e8C12725C975f70b0B2d3e2e6" 
+export const TreasuryAddress ="0x5583F6033B4e36A9eC3D2e55Ae38B4e54c371413"

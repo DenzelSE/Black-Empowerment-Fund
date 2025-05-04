@@ -1,71 +1,177 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button1"
-import { Calendar, Clock } from "lucide-react"
+import { TrendingUp, ArrowUpRight } from "lucide-react"
 
-export default function PayoutsPage() {
+export default function InvestmentsPage() {
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">My Payouts</h1>
+      <h1 className="text-2xl font-bold">Investments</h1>
 
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Your Next Payout</CardTitle>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-sm font-medium">Total Investment Value</CardTitle>
+          <TrendingUp className="h-4 w-4 text-purple-600" />
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-purple-600" />
-              <span>Month 3 (June 2025)</span>
-            </div>
-            <div className="text-xl font-bold">R3,000</div>
+        <CardContent>
+          <div className="text-2xl font-bold">R1,750</div>
+          <div className="flex items-center text-green-500 text-sm">
+            <ArrowUpRight className="h-4 w-4 mr-1" />
+            <span>+16.7% from initial investment</span>
           </div>
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Clock className="h-4 w-4" />
-            <span>1 month remaining</span>
-          </div>
-          <Button className="w-full bg-purple-600 hover:bg-purple-700">Set Payment Method</Button>
         </CardContent>
       </Card>
 
-      <h2 className="text-xl font-semibold">Payout Schedule</h2>
-      <div className="space-y-4">
-        {[
-          { month: 1, member: "John D.", amount: "R3,000", status: "Completed", date: "April 2025" },
-          { month: 2, member: "Sarah M.", amount: "R3,000", status: "Completed", date: "May 2025" },
-          { month: 3, member: "You", amount: "R3,000", status: "Upcoming", date: "June 2025" },
-          { month: 4, member: "Michael K.", amount: "R3,000", status: "Scheduled", date: "July 2025" },
-          { month: 5, member: "Thabo N.", amount: "R3,000", status: "Scheduled", date: "August 2025" },
-          { month: 6, member: "Lerato M.", amount: "R3,000", status: "Scheduled", date: "September 2025" },
-        ].map((payout) => (
-          <Card key={payout.month} className={payout.member === "You" ? "border-purple-600" : ""}>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-center">
+      <Tabs defaultValue="portfolio" className="w-full">
+        <TabsList>
+          <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
+          <TabsTrigger value="opportunities">Opportunities</TabsTrigger>
+          <TabsTrigger value="history">History</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="portfolio" className="space-y-6">
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Current Investments</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between items-center py-2 border-b">
                 <div>
-                  <div className="font-medium">Month {payout.month}</div>
-                  <div className="text-sm text-muted-foreground">{payout.date}</div>
+                  <div className="font-medium">USDC Lending</div>
+                  <div className="text-xs text-muted-foreground">Aave Protocol</div>
                 </div>
-                <div>
-                  <div className="font-medium">{payout.member}</div>
-                  <div className="text-sm text-muted-foreground">{payout.amount}</div>
+                <div className="text-right">
+                  <div>R875</div>
+                  <div className="text-xs text-green-500">+4.2% APY</div>
                 </div>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b">
                 <div>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      payout.status === "Completed"
-                        ? "bg-green-100 text-green-800"
-                        : payout.status === "Upcoming"
-                          ? "bg-purple-100 text-purple-800"
-                          : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {payout.status}
-                  </span>
+                  <div className="font-medium">ETH Staking</div>
+                  <div className="text-xs text-muted-foreground">Lido Finance</div>
+                </div>
+                <div className="text-right">
+                  <div>R525</div>
+                  <div className="text-xs text-green-500">+5.8% APY</div>
+                </div>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <div>
+                  <div className="font-medium">Liquidity Provision</div>
+                  <div className="text-xs text-muted-foreground">Uniswap V3</div>
+                </div>
+                <div className="text-right">
+                  <div>R350</div>
+                  <div className="text-xs text-green-500">+7.5% APY</div>
                 </div>
               </div>
             </CardContent>
           </Card>
-        ))}
-      </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Performance Overview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span>Initial Investment</span>
+                  <span>R1,500</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Current Value</span>
+                  <span>R1,750</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Total Profit</span>
+                  <span className="text-green-500">+R250</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>ROI</span>
+                  <span className="text-green-500">+16.7%</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="opportunities">
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Investment Opportunities</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="border rounded-lg p-4 space-y-2">
+                <div className="flex justify-between">
+                  <div className="font-medium">Stablecoin Yield Farming</div>
+                  <div className="text-green-500">+8.5% APY</div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Earn yield on stablecoins through automated yield farming strategies.
+                </p>
+                <div className="flex justify-end">
+                  <Button variant="outline" className="mr-2">
+                    Learn More
+                  </Button>
+                  <Button className="bg-purple-600 hover:bg-purple-700">Propose</Button>
+                </div>
+              </div>
+
+              <div className="border rounded-lg p-4 space-y-2">
+                <div className="flex justify-between">
+                  <div className="font-medium">BTC Yield Strategy</div>
+                  <div className="text-green-500">+4.2% APY</div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Generate yield on Bitcoin through collateralized lending.
+                </p>
+                <div className="flex justify-end">
+                  <Button variant="outline" className="mr-2">
+                    Learn More
+                  </Button>
+                  <Button className="bg-purple-600 hover:bg-purple-700">Propose</Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="history">
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Investment History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { date: "May 1, 2025", action: "Deposit", amount: "R250", asset: "ETH Staking", status: "Completed" },
+                  { date: "Apr 15, 2025", action: "Yield", amount: "+R25", asset: "USDC Lending", status: "Completed" },
+                  {
+                    date: "Apr 1, 2025",
+                    action: "Deposit",
+                    amount: "R500",
+                    asset: "USDC Lending",
+                    status: "Completed",
+                  },
+                ].map((item, index) => (
+                  <div key={index} className="flex justify-between items-center py-2 border-b">
+                    <div>
+                      <div className="font-medium">
+                        {item.action}: {item.asset}
+                      </div>
+                      <div className="text-xs text-muted-foreground">{item.date}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className={item.action === "Yield" ? "text-green-500" : ""}>{item.amount}</div>
+                      <div className="text-xs text-muted-foreground">{item.status}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
