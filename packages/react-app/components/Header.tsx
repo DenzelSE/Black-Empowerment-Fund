@@ -20,61 +20,11 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hideConnectBtn, setHideConnectBtn] = useState(false);
   const { connect } = useConnect();
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [walletConnected, setWalletConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState("");
   const navigate = useRouter();
   const location = usePathname();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  const checkRegistration = async (address: string) => {
-    const registeredAddress = localStorage.getItem("walletAddress");
-    if (registeredAddress) {
-      toast(`Welcome back ${registeredAddress}`);
-      navigate.push("/dashboard");
-
-    } else {
-      toast.info("Please register your wallet address");
-      navigate.push("/signup");
-    }
-  }
-
-  // Check if wallet was previously connected
-  useEffect(() => {
-    const savedAddress = localStorage.getItem('walletAddress');
-    if (savedAddress) {
-      setWalletAddress(savedAddress);
-      setWalletConnected(true);
-    }
-  }, []);
-
-  const connectWallet = async () => {
-    setIsConnecting(true);
-    try {
-
-      if (window.ethereum) {
-        toast.info("Connecting to wallet...");
-
-        const accounts = await window.ethereum.request({
-          method: "eth_requestAccounts",
-        });
-        const address = accounts[0];
-        setWalletAddress(address);
-        setWalletConnected(true);
-        localStorage.setItem("walletAddress", address);
-        toast.success("Wallet connected successfully");
-        checkRegistration(address);
-      } else {
-        toast.error("Please install a web3 wallet like MetaMask");
-      }
-
-    } catch (error) {
-      console.error("Error connecting wallet:", error);
-      toast.error("Error connecting wallet");
-    }
-    setIsConnecting(false);
-  }
 
   // Auto-connect if MiniPay + Mobile
   useEffect(() => {
@@ -87,16 +37,13 @@ const Navbar = () => {
       // Use wagmi connector if needed
       setTimeout(() => {
         connect({ connector: injected({ target: 'metaMask' }) });
-        connectWallet(); // Manually trigger wallet logic
       }, 0);
     } else {
       setHideConnectBtn(false);
     }
-  }, [connect, connectWallet]);
+  }, [connect]);
 
-  const handleConnectWallet = async () => {
-    connectWallet();
-  }
+
 
   const isHomePage = location === "/";
   const isProtectedPage = location === "/dashboard"
@@ -142,16 +89,16 @@ const Navbar = () => {
                 </a>
 
                 {!hideConnectBtn && (
-              <ConnectButton
-                showBalance={{
-                  smallScreen: false,
-                  largeScreen: true,
-                }}
-                accountStatus="address"
-                chainStatus="icon"
-                label="Connect Wallet"
-              />
-            )}
+                  <ConnectButton
+                    showBalance={{
+                      smallScreen: false,
+                      largeScreen: true,
+                    }}
+                    accountStatus="address"
+                    chainStatus="icon"
+                    label="Connect Wallet"
+                  />
+                )}
               </>
             )}
 
@@ -184,7 +131,7 @@ const Navbar = () => {
               </Button>
             )}
 
-            
+
           </div>
 
           {/* Mobile menu button */}
@@ -238,16 +185,16 @@ const Navbar = () => {
                   </a>
 
                   {!hideConnectBtn && (
-                <ConnectButton
-                  showBalance={{
-                    smallScreen: false,
-                    largeScreen: true,
-                  }}
-                  accountStatus="address"
-                  chainStatus="icon"
-                  label="Connect Wallet"
-                />
-              )}
+                    <ConnectButton
+                      showBalance={{
+                        smallScreen: false,
+                        largeScreen: true,
+                      }}
+                      accountStatus="address"
+                      chainStatus="icon"
+                      label="Connect Wallet"
+                    />
+                  )}
 
                 </>
               )}
@@ -291,7 +238,7 @@ const Navbar = () => {
 
               )}
 
-              
+
 
 
             </div>

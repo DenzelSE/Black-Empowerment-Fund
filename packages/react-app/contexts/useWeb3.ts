@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import StableTokenABI from "./cusd-abi.json";
-import MinipayNFTABI from "./minipay-nft.json";
+import StokvelNFT from "./StockvelNFT.json"
+import Treasury from "./Treasury.json";
+import StokvelTreasury from "./Treasury.json"
+import { BEFTokenAddress, StockvelNFTAddress, TreasuryAddress } from "../constants";
+
 import {
     createPublicClient,
     createWalletClient,
@@ -9,150 +13,138 @@ import {
     http,
     parseEther,
     stringToHex,
-} from "viem";
-import { celoAlfajores } from "viem/chains";
+} from "viem"; // low level shit
+import { celoAlfajores } from "viem/chains"; 
 
-const publicClient = createPublicClient({
+
+import { useAccount } from "wagmi"; // pretty shit, pretty useless unless in a component
+
+
+// only used for read only transactions to the blockchain
+const celoPublicClient = createPublicClient({
     chain: celoAlfajores,
     transport: http(),
 });
 
-const cUSDTokenAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1"; // Testnet
-const MINIPAY_NFT_CONTRACT = "0xE8F4699baba6C86DA9729b1B0a1DA1Bd4136eFeF"; // Testnet
 
-const BEFNFT = getContract({
-    abi: MinipayNFTABI.abi,
-    address: MINIPAY_NFT_CONTRACT,
-    client: publicClient,
+
+const befBFT_celo = getContract({
+    abi: StokvelNFT.abi,
+    address: StockvelNFTAddress,
+    client: celoPublicClient,
+});
+
+const celoStable = getContract({
+    abi: StableTokenABI.abi,
+    address: BEFTokenAddress,
+    client: celoPublicClient,
 });
 
 
-
 export const useWeb3 = () => {
-    const [address, setAddress] = useState<string | null>(null);
-    const [isMember, setIsMember] = useState<boolean>(false);
-    const [nftOwnership, setNftOwnership] = useState<boolean>(false);
+    const account = useAccount();
+    const u_address = account.address;
 
-    const getWalletClient = () => {
-        return createWalletClient({
+    // const celoWalletClient = createWalletClient({
+    //     chain: celoAlfajores,
+    //     transport: custom(window.ethereum),
+    // });
+
+    // join stokvel function
+    const joinStokvel = async () => {
+
+        let celoWalletClient = createWalletClient({
             transport: custom(window.ethereum),
             chain: celoAlfajores,
         });
-    };
-
-    const getUserAddress = async () => {
-        if (typeof window !== "undefined" && window.ethereum) {
-            let walletClient = getWalletClient();
-            let [address] = await walletClient.getAddresses();
-            if (!address) {
-                console.error("No address found");
-                return;
-            }
-            setAddress(address);
-
-            const isNFTOwner = (await BEFNFT.read.balanceOf([address])) as number;
-            setNftOwnership(isNFTOwner > 0);
-            setIsMember(isNFTOwner > 0);
-        }
-    };
-
-    useEffect(() => {
         try {
-            getUserAddress();
-        } catch (error) {
-            console.error("Error getting user address:", error);
-        }
-    }, []);
+            const { request } = await celoPublicClient.simulateContract({
+                address: StockvelNFTAddress,
+                abi: StokvelNFT.abi,
+                functionName: 'join',
+                account: u_address,
+              })
 
-    const checkMembership = async () => {
-        if (typeof window !== "undefined" && window.ethereum) {
-            let walletClient = getWalletClient();
-            let [address] = await walletClient.getAddresses();
+              const hash = await celoWalletClient.writeContract(request)
+              return hash;
 
-            const isNFTOwner = (await BEFNFT.read.balanceOf([address])) as number;
-            setNftOwnership(isNFTOwner > 0);
-            setIsMember(isNFTOwner > 0);
+        } catch (e) {
+            alert(e);
         }
     }
 
-    const sendCUSD = async (to: string, amount: string) => {
-        let walletClient = createWalletClient({
-            transport: custom(window.ethereum),
-            chain: celoAlfajores,
-        });
-
-        let [address] = await walletClient.getAddresses();
-
-        const amountInWei = parseEther(amount);
-
-        const tx = await walletClient.writeContract({
-            address: cUSDTokenAddress,
+    const getStableAllowance = async () => {
+        const data = await celoPublicClient.readContract({
+            address: BEFTokenAddress,
             abi: StableTokenABI.abi,
-            functionName: "transfer",
+            functionName: 'allowance',
+            args: [u_address, StockvelNFTAddress],
+          })
+        
+          const user_allowance = parseFloat((data as bigint).toString()) / 1e6;
+
+        return user_allowance;
+    }
+
+    const mintTokens = async () => {
+
+        let celoWalletClient = createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
+        });
+        
+        let [address] = await celoWalletClient.getAddresses();
+
+        const res = await celoWalletClient.writeContract({
+            address: BEFTokenAddress,
+            abi: StableTokenABI.abi,
+            functionName: 'mint',
+            args: [u_address],
             account: address,
-            args: [to, amountInWei],
         });
 
-        let receipt = await publicClient.waitForTransactionReceipt({
-            hash: tx,
+        return res;
+
+    }
+
+    const hasJoined = async () => {
+        
+        let celoWalletClient = createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
         });
+        
+        let [address] = await celoWalletClient.getAddresses();
 
-        return receipt;
-    };
+        const res = await celoPublicClient.readContract({
+            address: StockvelNFTAddress,
+            abi: StokvelNFT.abi,
+            functionName: 'hasJoined',
+            args: [u_address],
+            account: address,
+          });
 
-    const mintMinipayNFT = async () => {
+          return res;
+    }
+
+    const increaseStableAllowance = async (amount: number) => {
+
         let walletClient = createWalletClient({
             transport: custom(window.ethereum),
             chain: celoAlfajores,
         });
-
         let [address] = await walletClient.getAddresses();
 
-        const tx = await walletClient.writeContract({
-            address: MINIPAY_NFT_CONTRACT,
-            abi: MinipayNFTABI.abi,
-            functionName: "safeMint",
+        const res = await walletClient.writeContract({
+            address: BEFTokenAddress,
+            abi: StableTokenABI.abi,
+            functionName: 'approve',
+            args: [StockvelNFTAddress, amount * 1e6],
             account: address,
-            args: [
-                address,
-                "https://cdn-production-opera-website.operacdn.com/staticfiles/assets/images/sections/2023/hero-top/products/minipay/minipay__desktop@2x.a17626ddb042.webp",
-            ],
         });
 
-        const receipt = await publicClient.waitForTransactionReceipt({
-            hash: tx,
-        });
-
-        return receipt;
-    };
-
-    const getNFTs = async () => {
-        let walletClient = createWalletClient({
-            transport: custom(window.ethereum),
-            chain: celoAlfajores,
-        });
-
-        const minipayNFTContract = getContract({
-            abi: MinipayNFTABI.abi,
-            address: MINIPAY_NFT_CONTRACT,
-            client: publicClient,
-        });
-
-        const [address] = await walletClient.getAddresses();
-        const nfts: any = await minipayNFTContract.read.getNFTsByAddress([
-            address,
-        ]);
-
-        let tokenURIs: string[] = [];
-
-        for (let i = 0; i < nfts.length; i++) {
-            const tokenURI: string = (await minipayNFTContract.read.tokenURI([
-                nfts[i],
-            ])) as string;
-            tokenURIs.push(tokenURI);
-        }
-        return tokenURIs;
-    };
+        return res;
+    }
 
     const signTransaction = async () => {
         let walletClient = createWalletClient({
@@ -169,17 +161,113 @@ export const useWeb3 = () => {
 
         return res;
     };
+    
+    const contribute = async (tokenId: number) =>{
+        
+        let walletClient = createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
+        });
+
+        let [address] = await walletClient.getAddresses();
+
+        try {
+            const res = await walletClient.writeContract({
+                address: TreasuryAddress,
+                abi: Treasury.abi,
+                functionName: 'contribute',
+                args: [tokenId],
+                account: address,
+              })
+
+              return res;
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+
+    const getTreasuryBalances = async () =>{
+        let celoWalletClient = createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
+        });
+        
+        let [address] = await celoWalletClient.getAddresses();
+
+        const savings = await celoPublicClient.readContract({
+            address: TreasuryAddress,
+            abi: Treasury.abi,
+            functionName: 'savingsBalance',
+            account: u_address,
+          });
+
+        
+          const defiBalance = await celoPublicClient.readContract({
+            address: TreasuryAddress,
+            abi: Treasury.abi,
+            functionName: 'defiBalance',
+            account: u_address,
+          });
+
+        
+
+          return {savings, defiBalance};
+    }
+
+    const memberData = async () => {
+        let celoWalletClient = createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
+        });
+        
+        let [address] = await celoWalletClient.getAddresses();
+
+        const Mdata = await celoPublicClient.readContract({
+            address: TreasuryAddress,
+            abi: Treasury.abi,
+            functionName: 'memberData',
+            account: u_address,
+          });
+
+        return Mdata;
+    }
+
+    const hasContributed = async () => {
+        
+        let celoWalletClient = createWalletClient({
+            transport: custom(window.ethereum),
+            chain: celoAlfajores,
+        });
+        
+        let [address] = await celoWalletClient.getAddresses();
+
+        const res = await celoPublicClient.readContract({
+            address: TreasuryAddress,
+            abi: Treasury.abi,
+            functionName: 'hasContributed',
+            account: address,
+          });
+
+          return res;
+    }
 
     return {
-        address,
-        isMember,
-        nftOwnership,
-        setIsMember,
-        setNftOwnership,
-        getUserAddress,
-        sendCUSD,
-        mintMinipayNFT,
-        getNFTs,
+        u_address,
+        account,
         signTransaction,
+        joinStokvel,
+        getStableAllowance,
+        increaseStableAllowance,
+        mintTokens,
+        hasJoined,
+        contribute,
+        getTreasuryBalances,
+        memberData
+
     };
 };
+function async() {
+    throw new Error("Function not implemented.");
+}
+

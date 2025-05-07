@@ -18,19 +18,14 @@ import { useWeb3 } from '@/contexts/useWeb3';
 const DashboardPage = () => {
     const navigate = useRouter();
     const { toast } = useToast();
-    const {address, getUserAddress} = useWeb3();
-    const [memberName, setMemberName] =  useState(address)// get address from local storage
+    const {u_address} = useWeb3();
+    const [memberName, setMemberName] =  useState(u_address)// get address from local storage
     const [payoutMonth, setPayoutMonth] = useState(3); // 1-6
     const [currentMonth, setCurrentMonth] = useState(2); // 1-6
     const [totalContributions, setTotalContributions] = useState(2000);
     const [treasuryValue, setTreasuryValue] = useState(3250);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        getUserAddress();
-    }, []);
-
-    // redirect to homepage if user disconnects
     
 
     useEffect(() => {
@@ -103,23 +98,23 @@ const DashboardPage = () => {
                             <Home className="h-5 w-5 mr-3" />
                             Dashboard
                         </Link>
-                        <Link href="#" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="/payouts" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <Wallet className="h-5 w-5 mr-3" />
                             My Payouts
                         </Link>
-                        <Link href="#" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="/treasury" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <PiggyBank className="h-5 w-5 mr-3" />
                             Treasury
                         </Link>
-                        <Link href="#" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="/investments" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <BarChart3 className="h-5 w-5 mr-3" />
                             Investments
                         </Link>
-                        <Link href="#" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="/proposals" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <Vote className="h-5 w-5 mr-3" />
                             Proposals
                         </Link>
-                        <Link href="#" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
+                        <Link href="/members" className="flex items-center px-4 py-2 rounded-lg hover:bg-white/10 text-white">
                             <Users className="h-5 w-5 mr-3" />
                             Members
                         </Link>
@@ -128,11 +123,11 @@ const DashboardPage = () => {
                     <div className="mt-auto">
                         <Button
                             variant="outline"
-                            className="w-full border-white/20 text-white hover:bg-white/10 hover:text-white"
+                            className="w-full border-white/20 text-black hover:bg-white/10 hover:text-white"
                             onClick={handleLogout}
                             title='Logout'
                         >
-                            <LogOut className="h-4 w-4 mr-2" /> Logout
+                            <LogOut className="h-4 w-4 mr-2 text-black" /> Logout
                         </Button>
                     </div>
                 </div>
@@ -162,7 +157,7 @@ const DashboardPage = () => {
                         <>
                             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 animate-fade-in">
                                 <div>
-                                    <h1 className="text-2xl md:text-3xl font-bold mb-2">Welcome, {address?.slice(0,10)}</h1>
+                                    <h1 className="text-2xl md:text-3xl font-bold mb-2">Welcome, {u_address?.slice(0,10)}</h1>
                                     <p className="text-gray-500">
                                         Member since March 2025 • NFT ID: #1234
                                     </p>

@@ -11,17 +11,17 @@ import { WagmiProvider, createConfig, http } from 'wagmi';
 import { celo, celoAlfajores } from 'wagmi/chains';
 
 import Layout from '../components/Layout';
-import { injectedWallet } from '@rainbow-me/rainbowkit/wallets';
+import { injectedWallet, metaMaskWallet, valoraWallet } from '@rainbow-me/rainbowkit/wallets';
 
 const connectors = connectorsForWallets(
   [
     {
       groupName: 'Recommended',
-      wallets: [injectedWallet],
+      wallets: [injectedWallet, valoraWallet, metaMaskWallet],
     },
   ],
   {
-    appName: 'Celo Composer',
+    appName: 'Black Empowerment Fund',
     projectId: process.env.WC_PROJECT_ID ?? '044601f65212332475a09bc14ceb3c34',
   }
 );
